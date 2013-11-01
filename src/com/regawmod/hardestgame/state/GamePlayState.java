@@ -1,5 +1,7 @@
 package com.regawmod.hardestgame.state;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -22,7 +24,7 @@ public class GamePlayState extends AbstractGameState
     Player player;
     Enemy en;
 
-    Enemy[] enemyCircle;
+    List<Enemy> enemies;
 
     public boolean collidesWithWall(Shape p)
     {
@@ -35,15 +37,14 @@ public class GamePlayState extends AbstractGameState
         this.playerImg = new Image("res/player.png");
         this.player = new Player(65, 65, this);
 
-        en = new BackAndForthEnemy(200, 400, this);
+        enemies = new ArrayList<Enemy>(18);
 
-        enemyCircle = new Enemy[17];
+        enemies.add(new Enemy(160, 160, this));
+        enemies.add(new BackAndForthEnemy(200, 400, this));
 
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
-                enemyCircle[i * 4 + j] = new CirclingEnemy(160, 160, j * Math.PI / 2, 25 + 25 * i, Math.PI / 2, this);
-
-        enemyCircle[16] = new Enemy(160, 160, this);
+                enemies.add(new CirclingEnemy(160, 160, j * Math.PI / 2, 25 + 25 * i, Math.PI / 2, this));
 
         float[] p = { 10, 10, 70, 10, 70, 110, 45, 110, 45, 70, 30, 70, 30, 100, 10, 100 };
 
@@ -57,13 +58,9 @@ public class GamePlayState extends AbstractGameState
     public void update(GameContainer gc, StateBasedGame game, float dt) throws SlickException
     {
         player.update(gc, dt);
-        en.update(gc, dt);
 
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                enemyCircle[i * 4 + j].update(gc, dt);
-
-        enemyCircle[16].update(gc, dt);
+        for (Enemy e : this.enemies)
+            e.update(gc, dt);
     }
 
     @Override
@@ -74,13 +71,9 @@ public class GamePlayState extends AbstractGameState
         g.draw(level);
 
         player.render(g);
-        en.render(g);
 
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                enemyCircle[i * 4 + j].render(g);
-
-        enemyCircle[16].render(g);
+        for (Enemy e : this.enemies)
+            e.render(g);
     }
 
     @Override
