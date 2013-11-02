@@ -20,7 +20,7 @@ public class UpAndDownEnemy extends Enemy
         {
             while (this.collidesWithWall())
             {
-                if (this.speed <= 0)
+                if (this.speed < 0)
                     this.moveY(.1f);
                 else
                     this.moveY(-.1f);

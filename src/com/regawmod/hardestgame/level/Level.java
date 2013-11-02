@@ -22,6 +22,7 @@ public abstract class Level implements Updatable, Renderable
     private Polygon boundingPoly;
     private Polygon startZone;
     private Polygon endZone;
+    private Color zoneColor;
 
     private List<Enemy> enemies;
     private List<GoldCoin> goldCoins;
@@ -43,6 +44,7 @@ public abstract class Level implements Updatable, Renderable
         this.boundingPoly = new Polygon();
         this.startZone = new Polygon();
         this.endZone = new Polygon();
+        this.zoneColor = new Color(181, 254, 180);
 
         loadLevelImage(levelImageName);
         initBoundingPolygon();
@@ -186,7 +188,7 @@ public abstract class Level implements Updatable, Renderable
     {
         this.levelImage.draw();
 
-        g.setColor(Color.green);
+        g.setColor(this.zoneColor);
         g.fill(startZone);
 
         //        g.setColor(Color.cyan);

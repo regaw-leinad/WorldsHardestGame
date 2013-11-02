@@ -1,6 +1,5 @@
 package com.regawmod.hardestgame.level;
 
-import com.regawmod.hardestgame.entity.BasicEnemy;
 import com.regawmod.hardestgame.entity.CirclingEnemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.entity.RightAndLeftEnemy;
@@ -45,7 +44,6 @@ public class TestLevel extends Level
     @Override
     public void initEnemies()
     {
-        addEnemy(new BasicEnemy(180, 160, this));
         addEnemy(new RightAndLeftEnemy(200, 405, 200, this));
         addEnemy(new UpAndDownEnemy(675, 270, 300, this));
 
@@ -64,13 +62,12 @@ public class TestLevel extends Level
     @Override
     public float getPlayerStartX()
     {
-        return 195f;
+        return 234f;
     }
 
     @Override
     public float getPlayerStartY()
     {
-        return 195f;
+        return 181f;
     }
-
 }

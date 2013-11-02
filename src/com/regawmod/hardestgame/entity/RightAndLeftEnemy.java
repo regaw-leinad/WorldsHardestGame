@@ -20,7 +20,7 @@ public class RightAndLeftEnemy extends Enemy
         {
             while (this.collidesWithWall())
             {
-                if (this.speed <= 0)
+                if (this.speed < 0)
                     this.moveX(.1f);
                 else
                     this.moveX(-.1f);

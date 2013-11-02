@@ -22,7 +22,7 @@ public final class Player extends MovableEntity
 
     public Player(Level level)
     {
-        super(new Rectangle(level.getPlayerStartX(), level.getPlayerStartY(), SIZE, SIZE), SPEED);
+        super(new Rectangle(level.getPlayerStartX() - SIZE / 2, level.getPlayerStartY() - SIZE / 2, SIZE, SIZE), SPEED);
 
         this.level = level;
         this.collidedWithEnemy = false;
