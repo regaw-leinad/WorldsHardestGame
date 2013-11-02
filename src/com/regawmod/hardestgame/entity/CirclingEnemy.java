@@ -1,6 +1,5 @@
 package com.regawmod.hardestgame.entity;
 
-import org.newdawn.slick.GameContainer;
 import com.regawmod.hardestgame.level.Level;
 
 public class CirclingEnemy extends Enemy
@@ -22,7 +21,7 @@ public class CirclingEnemy extends Enemy
     }
 
     @Override
-    public void update(GameContainer gc, float dt)
+    public void update(float dt)
     {
         this.angle += this.speed * dt;
 

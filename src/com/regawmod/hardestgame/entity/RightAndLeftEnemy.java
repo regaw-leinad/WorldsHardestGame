@@ -1,26 +1,24 @@
 package com.regawmod.hardestgame.entity;
 
-import org.newdawn.slick.GameContainer;
 import com.regawmod.hardestgame.level.Level;
 
 public class RightAndLeftEnemy extends Enemy
 {
-    public RightAndLeftEnemy(float x, float y, Level level)
+    public RightAndLeftEnemy(float x, float y, float speed, Level level)
     {
-        super(x, y, level);
+        super(x, y, level, true);
 
-        this.setSpeed(300);
+        this.setSpeed(speed);
     }
 
     @Override
-    public void update(GameContainer gc, float dt)
+    public void update(float dt)
     {
         this.moveX(this.speed * dt);
 
-        if (this.collidedWithWall())
+        if (this.collidesWithWall())
         {
-
-            while (this.collidedWithWall())
+            while (this.collidesWithWall())
             {
                 if (this.speed <= 0)
                     this.moveX(.1f);
@@ -30,10 +28,5 @@ public class RightAndLeftEnemy extends Enemy
 
             this.speed *= -1;
         }
-    }
-
-    private boolean collidedWithWall()
-    {
-        return this.level.collidesWithWall(this);
     }
 }

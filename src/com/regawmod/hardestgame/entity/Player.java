@@ -12,25 +12,75 @@ public final class Player extends MovableEntity
 {
     public static final float SIZE = 26f;
     public static final float SPEED = 100f;
+    public static final float FADE_ALPHA_PER_SEC = 1.5f;
 
     private Level level;
+    private boolean collidedWithEnemy;
+
+    private Color outsideColor;
+    private Color insideColor;
 
     public Player(Level level)
     {
-        super(new Rectangle(level.getPlayerStartX(), level.getPlayerStartY(), SIZE, SIZE), 100f);
+        super(new Rectangle(level.getPlayerStartX(), level.getPlayerStartY(), SIZE, SIZE), SPEED);
 
         this.level = level;
+        this.collidedWithEnemy = false;
+        this.outsideColor = new Color(Color.black);
+        this.insideColor = new Color(Color.red);
     }
 
     @Override
-    public void update(GameContainer gc, float dt)
+    public final void update(GameContainer gc, float dt)
     {
-        Input input = gc.getInput();
+        if (this.collidedWithEnemy)
+        {
+            this.insideColor.a -= FADE_ALPHA_PER_SEC * dt;
+            this.outsideColor.a -= FADE_ALPHA_PER_SEC * dt;
 
-        float distance = this.speed * dt;
+            if (this.insideColor.a <= 0)
+                resetPlayer();
+        }
+        else
+        {
+            Input input = gc.getInput();
+            float distance = this.speed * dt;
 
-        updateY(input, distance);
-        updateX(input, distance);
+            updateY(input, distance);
+            updateX(input, distance);
+
+            checkEnemyCollision();
+            checkGoldCoinCollision();
+        }
+    }
+
+    private void checkGoldCoinCollision()
+    {
+        this.level.collidesWithGoldCoin(this);
+    }
+
+    private void resetPlayer()
+    {
+        resetColor();
+        resetPosition();
+        this.collidedWithEnemy = false;
+    }
+
+    private void resetColor()
+    {
+        this.insideColor.a = 1.0f;
+        this.outsideColor.a = 1.0f;
+    }
+
+    private void resetPosition()
+    {
+        this.setX(this.level.getPlayerStartX());
+        this.setY(this.level.getPlayerStartY());
+    }
+
+    private void checkEnemyCollision()
+    {
+        this.collidedWithEnemy = this.level.collidesWithEnemy(this);
     }
 
     private void updateX(Input input, float distance)
@@ -93,10 +143,9 @@ public final class Player extends MovableEntity
 
     private void drawPlayer(Graphics g)
     {
-        g.setColor(Color.black);
+        g.setColor(this.outsideColor);
         g.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        // g.drawRect(this.getX() - 4, this.getY() - 4, this.getWidth() + 7, this.getHeight() + 7);
-        g.setColor(Color.red);
+        g.setColor(this.insideColor);
         g.fillRect(this.getX() + 4, this.getY() + 4, this.getWidth() - 8, this.getHeight() - 8);
     }
 

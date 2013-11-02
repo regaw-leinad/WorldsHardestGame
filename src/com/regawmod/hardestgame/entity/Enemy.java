@@ -7,18 +7,33 @@ import org.newdawn.slick.geom.Circle;
 import com.regawmod.entity.MovableEntity;
 import com.regawmod.hardestgame.level.Level;
 
-public class Enemy extends MovableEntity
+public abstract class Enemy extends MovableEntity
 {
     public static final float ENEMY_RADIUS = 8;
 
-    protected Level level;
+    private boolean boundedByLevel;
+    private Level level;
 
     public Enemy(float x, float y, Level level)
+    {
+        this(x, y, level, false);
+    }
+
+    public Enemy(float x, float y, Level level, boolean bounded)
     {
         super(new Circle(x, y, ENEMY_RADIUS), 0f);
 
         this.level = level;
+        setBoundedByLevel(bounded);
     }
+
+    @Override
+    public final void update(GameContainer gc, float dt)
+    {
+        update(dt);
+    }
+
+    protected abstract void update(float dt);
 
     @Override
     public final void render(Graphics g)
@@ -29,9 +44,18 @@ public class Enemy extends MovableEntity
         g.fillOval(this.getX() + 3, this.getY() + 3, this.getWidth() - 6, this.getHeight() - 6);
     }
 
-    @Override
-    public void update(GameContainer gc, float dt)
+    public boolean isBoundedByLevel()
     {
+        return this.boundedByLevel;
+    }
 
+    public void setBoundedByLevel(boolean bounded)
+    {
+        this.boundedByLevel = bounded;
+    }
+
+    protected boolean collidesWithWall()
+    {
+        return this.level.collidesWithWall(this);
     }
 }

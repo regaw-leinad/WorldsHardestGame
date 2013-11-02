@@ -1,5 +1,6 @@
 package com.regawmod.entity;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Shape;
 
 public abstract class MovableEntity extends Entity
@@ -32,4 +33,17 @@ public abstract class MovableEntity extends Entity
     {
         return this.speed;
     }
+
+    @Override
+    public void update(GameContainer gc, float dt)
+    {
+    }
+    //
+    //    @Override
+    //    public final void update(GameContainer gc, float dt)
+    //    {
+    //        update(gc.getInput(), dt);
+    //    }
+    //
+    //    protected abstract void update(Input input, float dt);
 }
