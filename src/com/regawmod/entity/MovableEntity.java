@@ -22,4 +22,14 @@ public abstract class MovableEntity extends Entity
     {
         this.setY(this.getY() + dy);
     }
+
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public float getSpeed()
+    {
+        return this.speed;
+    }
 }

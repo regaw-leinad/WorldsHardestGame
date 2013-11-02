@@ -1,7 +1,7 @@
 package com.regawmod.hardestgame.entity;
 
 import org.newdawn.slick.GameContainer;
-import com.regawmod.hardestgame.state.GamePlayState;
+import com.regawmod.hardestgame.level.Level;
 
 public class CirclingEnemy extends Enemy
 {
@@ -10,9 +10,9 @@ public class CirclingEnemy extends Enemy
     private float revolveAroundX;
     private float revolveAroundY;
 
-    public CirclingEnemy(float cX, float cY, double initAngle, float radius, double radiansPerSecond, GamePlayState game)
+    public CirclingEnemy(float cX, float cY, double initAngle, float radius, double radiansPerSecond, Level level)
     {
-        super(cX + (float)Math.cos(initAngle) * radius, cY + (float)Math.sin(initAngle) * radius, game);
+        super(cX + (float)Math.cos(initAngle) * radius, cY + (float)Math.sin(initAngle) * radius, level);
 
         this.revolveAroundX = cX;
         this.revolveAroundY = cY;
@@ -26,8 +26,8 @@ public class CirclingEnemy extends Enemy
     {
         this.angle += this.speed * dt;
 
-        if (this.angle >= 360)
-            this.angle -= 360;
+        if (this.angle >= 2 * Math.PI)
+            this.angle -= 2 * Math.PI;
 
         this.setCenterX((float)(this.revolveAroundX + this.radius * Math.cos(angle)));
         this.setCenterY((float)(this.revolveAroundY + this.radius * Math.sin(angle)));

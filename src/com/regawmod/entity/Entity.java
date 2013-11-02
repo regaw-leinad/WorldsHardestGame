@@ -6,7 +6,7 @@ import org.newdawn.slick.geom.Shape;
 import com.regawmod.slick.interfaces.Renderable;
 import com.regawmod.slick.interfaces.Updatable;
 
-public abstract class Entity implements Renderable, Updatable
+public abstract class Entity implements Updatable, Renderable
 {
     private Shape body;
     private boolean shouldRemove;
@@ -81,11 +81,6 @@ public abstract class Entity implements Renderable, Updatable
     public void flagForRemoval()
     {
         this.shouldRemove = true;
-    }
-
-    public boolean collidesWith(Shape s)
-    {
-        return this.body.intersects(s);
     }
 
     /**
