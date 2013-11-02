@@ -39,7 +39,9 @@ public final class Player extends MovableEntity
             this.outsideColor.a -= FADE_ALPHA_PER_SEC * dt;
 
             if (this.insideColor.a <= 0)
-                resetPlayer();
+            {
+                resetLevel();
+            }
         }
         else
         {
@@ -59,8 +61,10 @@ public final class Player extends MovableEntity
         this.level.collidesWithGoldCoin(this);
     }
 
-    private void resetPlayer()
+    private void resetLevel()
     {
+        this.level.resetLevelAfterEnemyCollision();
+
         resetColor();
         resetPosition();
         this.collidedWithEnemy = false;

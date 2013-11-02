@@ -8,10 +8,10 @@ import org.newdawn.slick.state.StateBasedGame;
 public abstract class AbstractGameState extends BasicGameState
 {
     @Override
-    public final void update(GameContainer container, StateBasedGame game, int delta) throws SlickException
+    public final void update(GameContainer gc, StateBasedGame game, int dt) throws SlickException
     {
-        update(container, game, delta / 1000.0f);
+        update(gc, game, dt / 1000.0f);
     }
 
-    public abstract void update(GameContainer container, StateBasedGame game, float delta) throws SlickException;
+    public abstract void update(GameContainer gc, StateBasedGame game, float dt) throws SlickException;
 }

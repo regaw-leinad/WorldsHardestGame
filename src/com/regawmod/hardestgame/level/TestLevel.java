@@ -1,9 +1,6 @@
 package com.regawmod.hardestgame.level;
 
-import com.regawmod.hardestgame.entity.CirclingEnemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
-import com.regawmod.hardestgame.entity.RightAndLeftEnemy;
-import com.regawmod.hardestgame.entity.UpAndDownEnemy;
 
 public class TestLevel extends Level
 {
@@ -39,24 +36,32 @@ public class TestLevel extends Level
     @Override
     protected void initEndZonePolygon()
     {
+        //        addEndZonePolygonPoint(121, 150);
+        //        addEndZonePolygonPoint(360, 150);
+        //        addEndZonePolygonPoint(360, 210);
+        //        addEndZonePolygonPoint(121, 210);
+        addEndZonePolygonPoint(121, 450);
+        addEndZonePolygonPoint(150, 450);
+        addEndZonePolygonPoint(150, 480);
+        addEndZonePolygonPoint(121, 480);
     }
 
     @Override
     public void initEnemies()
     {
-        addEnemy(new RightAndLeftEnemy(200, 405, 200, this));
-        addEnemy(new UpAndDownEnemy(675, 270, 300, this));
-
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                addEnemy(new CirclingEnemy(220, 300, j * Math.PI / 2, 15 + 15 * i, Math.PI / 2, this));
+        //        addEnemy(new RightAndLeftEnemy(200, 405, 200, this));
+        //        addEnemy(new UpAndDownEnemy(675, 270, 300, this));
+        //
+        //        for (int i = 0; i < 4; i++)
+        //            for (int j = 0; j < 4; j++)
+        //                addEnemy(new CirclingEnemy(220, 300, j * Math.PI / 2, 15 + 15 * i, Math.PI / 2, this));
     }
 
     @Override
     protected void initGoldCoins()
     {
         addGoldCoin(new GoldCoin(200, 405, this));
-        addGoldCoin(new GoldCoin(675, 257, this));
+        //addGoldCoin(new GoldCoin(675, 257, this));
     }
 
     @Override

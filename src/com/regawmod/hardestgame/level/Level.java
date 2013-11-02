@@ -53,7 +53,7 @@ public abstract class Level implements Updatable, Renderable
         initEnemies();
         initGoldCoins();
 
-        this.totalCoins = goldCoins.size();
+        this.totalCoins = this.goldCoins.size();
         this.coinsCollected = 0;
 
         this.levelCompleted = false;
@@ -134,11 +134,6 @@ public abstract class Level implements Updatable, Renderable
         this.endZone = new Polygon(points);
     }
 
-    //    protected final void setEndZone(float x, float y, float width, float height)
-    //    {
-    //        this.endZone = new Rectangle(x, y, width, height);
-    //    }
-
     public final boolean collidesWithWall(Entity entity)
     {
         return !this.boundingPoly.contains(entity.getBody());
@@ -156,12 +151,11 @@ public abstract class Level implements Updatable, Renderable
 
     public final boolean collidesWithGoldCoin(Entity entity)
     {
-        for (GoldCoin g : this.goldCoins)
+        for (GoldCoin coin : this.goldCoins)
         {
-            if (entity.getBody().intersects(g.getBody()))
+            if (entity.getBody().intersects(coin.getBody()))
             {
-                g.flagAsCollected();
-                this.coinsCollected++;
+                coin.flagAsCollected();
                 return true;
             }
         }
@@ -169,18 +163,35 @@ public abstract class Level implements Updatable, Renderable
         return false;
     }
 
+    public final void resetLevelAfterEnemyCollision()
+    {
+        if (this.coinsCollected > 0)
+        {
+            this.coinsCollected = 0;
+            this.goldCoins.clear();
+            initGoldCoins();
+        }
+    }
+
     @Override
     public final void update(GameContainer gc, float dt)
     {
-        checkLevelState();
         updateEnemies(gc, dt);
         updateGoldCoins(gc, dt);
         updatePlayer(gc, dt);
+
+        updateLevelState();
     }
 
-    private void checkLevelState()
+    private void updateLevelState()
     {
+        if (playerHasWon())
+            this.levelCompleted = true;
+    }
 
+    private boolean playerHasWon()
+    {
+        return this.endZone.contains(this.player.getBody()) && this.coinsCollected == this.totalCoins;
     }
 
     @Override
@@ -188,15 +199,18 @@ public abstract class Level implements Updatable, Renderable
     {
         this.levelImage.draw();
 
-        g.setColor(this.zoneColor);
-        g.fill(startZone);
-
-        //        g.setColor(Color.cyan);
-        //        g.draw(this.boundingPoly);
+        drawZones(g);
 
         renderEnemies(g);
         renderPlayer(g);
         renderGoldCoins(g);
+    }
+
+    private void drawZones(Graphics g)
+    {
+        g.setColor(this.zoneColor);
+        g.fill(this.startZone);
+        g.fill(this.endZone);
     }
 
     private void updatePlayer(GameContainer gc, float dt)
@@ -249,7 +263,17 @@ public abstract class Level implements Updatable, Renderable
     private void removeFlaggedGoldCoins()
     {
         for (int i = this.goldCoins.size() - 1; i >= 0; i--)
+        {
             if (this.goldCoins.get(i).shouldRemove())
+            {
                 this.goldCoins.remove(i);
+                this.coinsCollected++;
+            }
+        }
+    }
+
+    public final boolean isLevelComplete()
+    {
+        return this.levelCompleted;
     }
 }
