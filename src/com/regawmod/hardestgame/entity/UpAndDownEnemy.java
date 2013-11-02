@@ -19,12 +19,7 @@ public class UpAndDownEnemy extends Enemy
         if (this.collidesWithWall())
         {
             while (this.collidesWithWall())
-            {
-                if (this.speed < 0)
-                    this.moveY(.1f);
-                else
-                    this.moveY(-.1f);
-            }
+                this.moveX(getBactrackComponent());
 
             this.speed *= -1;
         }

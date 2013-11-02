@@ -9,6 +9,7 @@ import com.regawmod.hardestgame.level.Level;
 
 public abstract class Enemy extends MovableEntity
 {
+    public static final float[] BACKTRACK_COMPONENT = { -0.1f, 0.1f };
     public static final float ENEMY_RADIUS = 8;
 
     private boolean boundedByLevel;
@@ -57,5 +58,10 @@ public abstract class Enemy extends MovableEntity
     protected boolean collidesWithWall()
     {
         return this.level.collidesWithWall(this);
+    }
+
+    protected float getBactrackComponent()
+    {
+        return BACKTRACK_COMPONENT[Float.floatToIntBits(this.speed) >>> 31];
     }
 }

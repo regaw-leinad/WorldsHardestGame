@@ -48,19 +48,19 @@ public class TestLevel extends Level
     @Override
     public void initEnemies()
     {
-        addEnemy(new RightAndLeftEnemy(200, 405, 200, this));
+        addEnemy(new RightAndLeftEnemy(200, 405, 150, this));
         addEnemy(new UpAndDownEnemy(675, 270, 300, this));
 
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
-                addEnemy(new CirclingEnemy(220, 300, j * Math.PI / 2, 15 + 15 * i, Math.PI / 2, this));
+                addEnemy(new CirclingEnemy(235, 300, j * Math.PI / 2, 15 + 25 * i, Math.PI / 2, this));
     }
 
     @Override
     protected void initGoldCoins()
     {
         addGoldCoin(new GoldCoin(200, 405, this));
-        //        addGoldCoin(new GoldCoin(675, 257, this));
+        addGoldCoin(new GoldCoin(675, 257, this));
     }
 
     @Override

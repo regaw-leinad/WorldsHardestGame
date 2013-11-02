@@ -47,12 +47,16 @@ public abstract class Level implements Updatable, Renderable
         this.boundingPoly = new Polygon();
         this.startZone = new Polygon();
         this.endZone = new Polygon();
+
         this.zoneColor = new Color(181, 254, 180);
 
         loadLevelImage(levelImageName);
         initBoundingPolygon();
         initStartZonePolygon();
         initEndZonePolygon();
+
+        checkZoneStates();
+
         initEnemies();
         initGoldCoins();
 
@@ -60,6 +64,22 @@ public abstract class Level implements Updatable, Renderable
         this.coinsCollected = 0;
 
         this.levelCompleted = false;
+
+    }
+
+    private void checkZoneStates()
+    {
+        if (this.boundingPoly.getPointCount() < 4)
+            throw new IllegalStateException("Bounding polygon is not set up correctly!");
+
+        if (this.startZone.getPointCount() < 4)
+            throw new IllegalStateException("Start zona is not set up correctly!");
+
+        if (this.endZone.getPointCount() < 4)
+            throw new IllegalStateException("End zone is not set up correctly!");
+
+        if (!this.startZone.contains(this.player.getBody()))
+            throw new IllegalStateException("Player must start in the Start zone.");
     }
 
     public void setGameStats(GameStats stats)
