@@ -7,23 +7,23 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import com.regawmod.hardestgame.GameStats;
 import com.regawmod.hardestgame.level.Level;
 import com.regawmod.hardestgame.level.TestLevel;
 
 public class InGameState extends AbstractGameState
 {
     private Level level;
+    private GameStats stats;
 
-    private int deathCount;
-    private int levelNumber;
     private boolean createNextLevel;
 
     @Override
     public void init(GameContainer gc, StateBasedGame game) throws SlickException
     {
+        this.stats = new GameStats();
         this.level = new TestLevel();
-        this.deathCount = 0;
-        this.levelNumber = 1;
+        this.level.setGameStats(this.stats);
         this.createNextLevel = false;
     }
 
@@ -46,6 +46,10 @@ public class InGameState extends AbstractGameState
 
         g.setColor(Color.black);
         g.fillRect(0, 0, gc.getWidth(), 60);
+
+        g.setColor(Color.white);
+        g.drawString("Deaths: " + this.stats.getAmountOfDeaths(), 280, 10);
+        g.drawString("Level: " + this.stats.getCurrentLevel(), 283, 30);
     }
 
     @Override
@@ -53,11 +57,17 @@ public class InGameState extends AbstractGameState
     {
         if (this.createNextLevel)
         {
-            this.levelNumber++;
+            this.stats.incrementLevel();
             this.level = new TestLevel();
+            this.level.setGameStats(this.stats);
         }
 
         super.leave(gc, game);
+    }
+
+    public void incrementDeaths()
+    {
+        this.stats.incrementDeaths();
     }
 
     @Override

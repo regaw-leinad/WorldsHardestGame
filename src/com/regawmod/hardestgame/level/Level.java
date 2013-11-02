@@ -9,6 +9,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 import com.regawmod.entity.Entity;
+import com.regawmod.hardestgame.GameStats;
 import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.entity.Player;
@@ -17,6 +18,8 @@ import com.regawmod.slick.interfaces.Updatable;
 
 public abstract class Level implements Updatable, Renderable
 {
+    private GameStats stats;
+
     private Player player;
 
     private Polygon boundingPoly;
@@ -57,6 +60,11 @@ public abstract class Level implements Updatable, Renderable
         this.coinsCollected = 0;
 
         this.levelCompleted = false;
+    }
+
+    public void setGameStats(GameStats stats)
+    {
+        this.stats = stats;
     }
 
     private void loadLevelImage(String levelImageName)
@@ -171,6 +179,8 @@ public abstract class Level implements Updatable, Renderable
             this.goldCoins.clear();
             initGoldCoins();
         }
+
+        this.stats.incrementDeaths();
     }
 
     @Override
@@ -191,7 +201,7 @@ public abstract class Level implements Updatable, Renderable
 
     private boolean playerHasWon()
     {
-        return this.endZone.contains(this.player.getBody()) && this.coinsCollected == this.totalCoins;
+        return this.endZone.contains(this.player.getCenterX(), this.player.getCenterY()) && this.coinsCollected == this.totalCoins;
     }
 
     @Override
