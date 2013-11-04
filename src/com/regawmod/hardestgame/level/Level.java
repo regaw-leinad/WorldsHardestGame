@@ -132,7 +132,7 @@ public abstract class Level implements Updatable, Renderable
 
         if (enemy.isBoundedByLevel() && !this.boundingPoly.contains(enemy.getBody()))
             throw new IllegalStateException("Bounded Enemy at x:" + enemy.getCenterX() + " y:" +
-                    enemy.getCenterY() + " is placed out of bounds of the level!");
+                    (enemy.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
 
         this.enemies.add(enemy);
     }
@@ -145,7 +145,7 @@ public abstract class Level implements Updatable, Renderable
 
             if (e.isBoundedByLevel() && !this.boundingPoly.contains(e.getBody()))
                 throw new IllegalStateException("Bounded Enemy at x:" + e.getCenterX() + " y:" +
-                        e.getCenterY() + " is placed out of bounds of the level!");
+                        (e.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
 
             this.enemies.add(e);
         }
@@ -157,7 +157,7 @@ public abstract class Level implements Updatable, Renderable
 
         if (!this.boundingPoly.contains(goldCoin.getBody()))
             throw new IllegalStateException("GoldCoin at x:" + goldCoin.getCenterX() + " y:" +
-                    goldCoin.getCenterY() + " is placed out of bounds of the level!");
+                    (goldCoin.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
 
         this.goldCoins.add(goldCoin);
     }

@@ -2,6 +2,7 @@ package com.regawmod.hardestgame.level;
 
 import com.regawmod.hardestgame.entity.CirclingEnemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
+import com.regawmod.hardestgame.entity.UpAndDownEnemy;
 
 public class BrandonLevel extends Level
 {
@@ -15,14 +16,14 @@ public class BrandonLevel extends Level
     @Override
     protected void initBoundingPolygon()
     {
-        addBoundingPolygonPoint(120, 30);
+        addBoundingPolygonPoint(119, 30);
         addBoundingPolygonPoint(360, 30);
-        addBoundingPolygonPoint(360, 210);
-        addBoundingPolygonPoint(630, 210);
-        addBoundingPolygonPoint(630, 90);
-        addBoundingPolygonPoint(750, 90);
+        addBoundingPolygonPoint(360, 209);
+        addBoundingPolygonPoint(629, 209);
+        addBoundingPolygonPoint(629, 89);
+        addBoundingPolygonPoint(750, 89);
         addBoundingPolygonPoint(750, 450);
-        addBoundingPolygonPoint(120, 450);
+        addBoundingPolygonPoint(119, 450);
     }
 
     @Override
@@ -53,6 +54,9 @@ public class BrandonLevel extends Level
     protected void initEnemies()
     {
         addEnemies(CirclingEnemy.getCircleGroupEnemy(this, 240f, 240, 4, 4, 50f, 20f, Math.PI / 2));
+
+        addEnemy(new UpAndDownEnemy(480, 250, 200, this));
+        addEnemy(new UpAndDownEnemy(420, 415, -200, this));
     }
 
     @Override

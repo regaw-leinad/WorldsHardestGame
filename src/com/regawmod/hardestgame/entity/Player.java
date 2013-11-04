@@ -145,10 +145,14 @@ public final class Player extends MovableEntity
 
     private void drawPlayer(Graphics g)
     {
+
         g.setColor(this.outsideColor);
-        g.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        g.fillRect(this.getX() + 1, this.getY() + 1, this.getWidth() - 1, this.getHeight() - 1);
         g.setColor(this.insideColor);
-        g.fillRect(this.getX() + 4, this.getY() + 4, this.getWidth() - 8, this.getHeight() - 8);
+        g.fillRect(this.getX() + 5, this.getY() + 5, this.getWidth() - 9, this.getHeight() - 9);
+
+        //        g.setColor(Color.cyan);
+        //        g.draw(this.getBody());
     }
 
     private boolean collidedWithWall()

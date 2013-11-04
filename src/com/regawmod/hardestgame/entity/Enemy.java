@@ -44,6 +44,9 @@ public abstract class Enemy extends MovableEntity
         g.setColor(Color.blue);
         g.fillOval(this.getX() + 3, this.getY() + 3, this.getWidth() - 6, this.getHeight() - 6);
 
+        //        g.setColor(Color.cyan);
+        //        g.draw(this.getBody());
+
         //        g.setColor(Color.black);
         //        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         //        g.setColor(Color.green);
