@@ -64,14 +64,8 @@ public class TestLevel extends Level
     }
 
     @Override
-    public float getPlayerStartX()
+    protected void initPlayerStartPosition()
     {
-        return 234f;
-    }
-
-    @Override
-    public float getPlayerStartY()
-    {
-        return 181f;
+        setPlayerStartPosition(234, 181);
     }
 }

@@ -1,5 +1,7 @@
 package com.regawmod.hardestgame.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.regawmod.hardestgame.level.Level;
 
 public class CirclingEnemy extends Enemy
@@ -30,5 +32,21 @@ public class CirclingEnemy extends Enemy
 
         this.setCenterX((float)(this.revolveAroundX + this.radius * Math.cos(angle)));
         this.setCenterY((float)(this.revolveAroundY + this.radius * Math.sin(angle)));
+    }
+
+    public static List<Enemy> getCircleGroupEnemy(Level level, float centerX, float centerY, int numOfLayers, int enemPerLayer, float initRadius, float indivRadius, double speed, float bladeAngle)
+    {
+        ArrayList<Enemy> result = new ArrayList<Enemy>();
+
+        for (int i = 0; i < numOfLayers; i++)
+            for (int j = 0; j < enemPerLayer; j++)
+                result.add(new CirclingEnemy(centerX, centerY + Level.LEVEL_OFFSET, (j * Math.PI / (enemPerLayer / 2)) - bladeAngle * i, initRadius + indivRadius * i, speed, level));
+
+        return result;
+    }
+
+    public static List<Enemy> getCircleGroupEnemy(Level level, float centerX, float centerY, int numOfLayers, int enemPerLayer, float initRadius, float indivRadius, double speed)
+    {
+        return getCircleGroupEnemy(level, centerX, centerY, numOfLayers, enemPerLayer, initRadius, indivRadius, speed, 0);
     }
 }

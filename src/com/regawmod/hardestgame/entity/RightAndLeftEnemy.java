@@ -16,12 +16,12 @@ public class RightAndLeftEnemy extends Enemy
     {
         this.moveX(this.speed * dt);
 
-        if (this.collidesWithWall())
+        if (this.collidesWithWall() || this.collidesWithZone())
         {
-            while (this.collidesWithWall())
-                this.moveX(getBactrackComponent());
+            while (this.collidesWithWall() || this.collidesWithZone())
+                this.moveX(this.getBactrackComponent());
 
-            this.speed *= -1;
+            this.turnAround();
         }
     }
 }

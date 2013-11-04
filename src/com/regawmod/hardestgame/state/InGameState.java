@@ -3,13 +3,14 @@ package com.regawmod.hardestgame.state;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import com.regawmod.hardestgame.GameStats;
+import com.regawmod.hardestgame.level.BrandonLevel;
 import com.regawmod.hardestgame.level.Level;
-import com.regawmod.hardestgame.level.TestLevel;
 
 public class InGameState extends AbstractGameState
 {
@@ -22,7 +23,7 @@ public class InGameState extends AbstractGameState
     public void init(GameContainer gc, StateBasedGame game) throws SlickException
     {
         this.stats = new GameStats();
-        this.level = new TestLevel();
+        this.level = new BrandonLevel();
         this.level.setGameStats(this.stats);
         this.createNextLevel = false;
     }
@@ -30,6 +31,9 @@ public class InGameState extends AbstractGameState
     @Override
     public void update(GameContainer gc, StateBasedGame game, float dt) throws SlickException
     {
+        if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
+            gc.exit();
+
         level.update(gc, dt);
 
         if (this.level.isLevelComplete())
@@ -58,7 +62,7 @@ public class InGameState extends AbstractGameState
         if (this.createNextLevel)
         {
             this.stats.incrementLevel();
-            this.level = new TestLevel();
+            this.level = new BrandonLevel();
             this.level.setGameStats(this.stats);
         }
 

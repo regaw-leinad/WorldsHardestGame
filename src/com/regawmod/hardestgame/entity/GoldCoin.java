@@ -9,7 +9,7 @@ import com.regawmod.hardestgame.level.Level;
 
 public class GoldCoin extends Entity
 {
-    public static final float FADE_ALPHA_PER_SEC = 3f;
+    public static final float FADE_ALPHA_PER_SEC = 2f;
 
     private Color insideColor;
     private Color outsideColor;
@@ -29,10 +29,15 @@ public class GoldCoin extends Entity
         this.collected = true;
     }
 
+    public boolean hasBeenCollected()
+    {
+        return this.collected;
+    }
+
     @Override
     public final void update(GameContainer gc, float dt)
     {
-        if (this.collected)
+        if (hasBeenCollected())
         {
             this.insideColor.a -= FADE_ALPHA_PER_SEC * dt;
             this.outsideColor.a -= FADE_ALPHA_PER_SEC * dt;

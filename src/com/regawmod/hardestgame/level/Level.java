@@ -18,6 +18,8 @@ import com.regawmod.slick.interfaces.Updatable;
 
 public abstract class Level implements Updatable, Renderable
 {
+    public static final float LEVEL_OFFSET = 60f;
+
     private GameStats stats;
 
     private Player player;
@@ -37,10 +39,11 @@ public abstract class Level implements Updatable, Renderable
 
     private boolean levelCompleted;
 
+    private float playerStartX;
+    private float playerStartY;
+
     public Level(String levelImageName)
     {
-        this.player = new Player(this);
-
         this.enemies = new ArrayList<Enemy>();
         this.goldCoins = new ArrayList<GoldCoin>();
 
@@ -50,10 +53,14 @@ public abstract class Level implements Updatable, Renderable
 
         this.zoneColor = new Color(181, 254, 180);
 
+        this.playerStartX = 0;
+        this.playerStartY = 0;
+
         loadLevelImage(levelImageName);
         initBoundingPolygon();
         initStartZonePolygon();
         initEndZonePolygon();
+        initPlayerStartPosition();
 
         checkZoneStates();
 
@@ -64,7 +71,14 @@ public abstract class Level implements Updatable, Renderable
         this.coinsCollected = 0;
 
         this.levelCompleted = false;
+    }
 
+    protected final void setPlayerStartPosition(float x, float y)
+    {
+        this.playerStartX = x;
+        this.playerStartY = y + LEVEL_OFFSET;
+
+        this.player = new Player(this);
     }
 
     private void checkZoneStates()
@@ -73,7 +87,7 @@ public abstract class Level implements Updatable, Renderable
             throw new IllegalStateException("Bounding polygon is not set up correctly!");
 
         if (this.startZone.getPointCount() < 4)
-            throw new IllegalStateException("Start zona is not set up correctly!");
+            throw new IllegalStateException("Start zone is not set up correctly!");
 
         if (this.endZone.getPointCount() < 4)
             throw new IllegalStateException("End zone is not set up correctly!");
@@ -102,20 +116,20 @@ public abstract class Level implements Updatable, Renderable
 
     protected abstract void initBoundingPolygon();
 
-    protected abstract void initEnemies();
-
-    protected abstract void initGoldCoins();
-
     protected abstract void initStartZonePolygon();
 
     protected abstract void initEndZonePolygon();
 
-    public abstract float getPlayerStartX();
+    protected abstract void initPlayerStartPosition();
 
-    public abstract float getPlayerStartY();
+    protected abstract void initEnemies();
+
+    protected abstract void initGoldCoins();
 
     protected final void addEnemy(Enemy enemy)
     {
+        enemy.setCenterY(enemy.getCenterY() + LEVEL_OFFSET);
+
         if (enemy.isBoundedByLevel() && !this.boundingPoly.contains(enemy.getBody()))
             throw new IllegalStateException("Bounded Enemy at x:" + enemy.getCenterX() + " y:" +
                     enemy.getCenterY() + " is placed out of bounds of the level!");
@@ -123,8 +137,24 @@ public abstract class Level implements Updatable, Renderable
         this.enemies.add(enemy);
     }
 
+    protected final void addEnemies(List<Enemy> enemies)
+    {
+        for (Enemy e : enemies)
+        {
+            e.setCenterY(e.getCenterY() + LEVEL_OFFSET);
+
+            if (e.isBoundedByLevel() && !this.boundingPoly.contains(e.getBody()))
+                throw new IllegalStateException("Bounded Enemy at x:" + e.getCenterX() + " y:" +
+                        e.getCenterY() + " is placed out of bounds of the level!");
+
+            this.enemies.add(e);
+        }
+    }
+
     protected final void addGoldCoin(GoldCoin goldCoin)
     {
+        goldCoin.setCenterY(goldCoin.getCenterY() + LEVEL_OFFSET);
+
         if (!this.boundingPoly.contains(goldCoin.getBody()))
             throw new IllegalStateException("GoldCoin at x:" + goldCoin.getCenterX() + " y:" +
                     goldCoin.getCenterY() + " is placed out of bounds of the level!");
@@ -134,32 +164,28 @@ public abstract class Level implements Updatable, Renderable
 
     protected final void addBoundingPolygonPoint(float x, float y)
     {
-        this.boundingPoly.addPoint(x, y);
-    }
-
-    protected final void setBoundingPolygonPoints(float[] points)
-    {
-        this.boundingPoly = new Polygon(points);
+        this.boundingPoly.addPoint(x, y + LEVEL_OFFSET);
     }
 
     protected final void addStartZonePolygonPoint(float x, float y)
     {
-        this.startZone.addPoint(x, y);
-    }
-
-    protected final void setStartZonePolygonPoints(float[] points)
-    {
-        this.startZone = new Polygon(points);
+        this.startZone.addPoint(x, y + LEVEL_OFFSET);
     }
 
     protected final void addEndZonePolygonPoint(float x, float y)
     {
-        this.endZone.addPoint(x, y);
+        this.endZone.addPoint(x, y + LEVEL_OFFSET);
     }
 
-    protected final void setEndZonePolygonPoints(float[] points)
+    public final boolean collidesWithZones(Entity entity)
     {
-        this.endZone = new Polygon(points);
+        if (entity.getBody().intersects(this.startZone) || this.startZone.contains(entity.getBody()))
+            return true;
+
+        if (entity.getBody().intersects(this.endZone) || this.endZone.contains(entity.getBody()))
+            return true;
+
+        return false;
     }
 
     public final boolean collidesWithWall(Entity entity)
@@ -179,16 +205,18 @@ public abstract class Level implements Updatable, Renderable
 
     public final boolean collidesWithGoldCoin(Entity entity)
     {
+        boolean collided = false;
+
         for (GoldCoin coin : this.goldCoins)
         {
             if (entity.getBody().intersects(coin.getBody()))
             {
                 coin.flagAsCollected();
-                return true;
+                collided = true;
             }
         }
 
-        return false;
+        return collided;
     }
 
     public final void resetLevelAfterEnemyCollision()
@@ -227,16 +255,19 @@ public abstract class Level implements Updatable, Renderable
     @Override
     public final void render(Graphics g)
     {
-        this.levelImage.draw();
+        this.levelImage.draw(0, LEVEL_OFFSET);
 
-        drawZones(g);
+        renderZones(g);
+
+        //        g.setColor(Color.cyan);
+        //        g.draw(this.boundingPoly);
 
         renderEnemies(g);
         renderPlayer(g);
         renderGoldCoins(g);
     }
 
-    private void drawZones(Graphics g)
+    private void renderZones(Graphics g)
     {
         g.setColor(this.zoneColor);
         g.fill(this.startZone);
@@ -305,5 +336,15 @@ public abstract class Level implements Updatable, Renderable
     public final boolean isLevelComplete()
     {
         return this.levelCompleted;
+    }
+
+    public final float getPlayerStartX()
+    {
+        return this.playerStartX;
+    }
+
+    public final float getPlayerStartY()
+    {
+        return this.playerStartY;
     }
 }
