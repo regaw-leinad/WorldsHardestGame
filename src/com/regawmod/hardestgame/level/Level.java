@@ -1,5 +1,6 @@
 package com.regawmod.hardestgame.level;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Color;
@@ -9,18 +10,21 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 import com.regawmod.entity.Entity;
-import com.regawmod.hardestgame.GameStats;
 import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.entity.Player;
 import com.regawmod.slick.interfaces.Renderable;
 import com.regawmod.slick.interfaces.Updatable;
 
+/**
+ * An abstract level for the game.
+ * 
+ * @author Dan Wager
+ */
 public abstract class Level implements Updatable, Renderable
 {
+    /** The offset of the level in the window, public for now :( */
     public static final float LEVEL_OFFSET = 60f;
-
-    private GameStats stats;
 
     private Player player;
 
@@ -42,7 +46,9 @@ public abstract class Level implements Updatable, Renderable
     private float playerStartX;
     private float playerStartY;
 
-    public Level(String levelImageName)
+    private boolean playerDied;
+
+    public Level()
     {
         this.enemies = new ArrayList<Enemy>();
         this.goldCoins = new ArrayList<GoldCoin>();
@@ -56,7 +62,8 @@ public abstract class Level implements Updatable, Renderable
         this.playerStartX = 0;
         this.playerStartY = 0;
 
-        loadLevelImage(levelImageName);
+        loadLevelImage();
+
         initBoundingPolygon();
         initStartZonePolygon();
         initEndZonePolygon();
@@ -71,6 +78,8 @@ public abstract class Level implements Updatable, Renderable
         this.coinsCollected = 0;
 
         this.levelCompleted = false;
+
+        this.playerDied = false;
     }
 
     protected final void setPlayerStartPosition(float x, float y)
@@ -96,16 +105,12 @@ public abstract class Level implements Updatable, Renderable
             throw new IllegalStateException("Player must start in the Start zone.");
     }
 
-    public void setGameStats(GameStats stats)
-    {
-        this.stats = stats;
-    }
-
-    private void loadLevelImage(String levelImageName)
+    private void loadLevelImage()
     {
         try
         {
-            this.levelImage = new Image("res/" + levelImageName + (levelImageName.endsWith(".png") ? "" : ".png"));
+            this.levelImage = new Image(System.getProperty("user.dir") + File.separator + "levels"
+                    + File.separator + "res" + File.separator + this.getClass().getSimpleName() + ".png");
         }
         catch (SlickException e)
         {
@@ -125,6 +130,8 @@ public abstract class Level implements Updatable, Renderable
     protected abstract void initEnemies();
 
     protected abstract void initGoldCoins();
+
+    public abstract String getName();
 
     protected final void addEnemy(Enemy enemy)
     {
@@ -179,25 +186,22 @@ public abstract class Level implements Updatable, Renderable
 
     public final boolean collidesWithZones(Entity entity)
     {
-        if (entity.getBody().intersects(this.startZone) || this.startZone.contains(entity.getBody()))
-            return true;
-
-        if (entity.getBody().intersects(this.endZone) || this.endZone.contains(entity.getBody()))
-            return true;
-
-        return false;
+        return entity.getBody().intersects(this.startZone) || this.startZone.contains(entity.getBody()) ||
+                entity.getBody().intersects(this.endZone) || this.endZone.contains(entity.getBody());
     }
 
     public final boolean collidesWithWall(Entity entity)
     {
+        // We need this !contains because large deltas 
+        // might bring the entity outside of the bounding poly
         return !this.boundingPoly.contains(entity.getBody());
-        //return boundingPoly.intersects(entity.getBody());
+        //        return boundingPoly.intersects(entity.getBody());
     }
 
     public final boolean collidesWithEnemy(Entity entity)
     {
         for (Entity e : this.enemies)
-            if (entity.getBody().intersects(e.getBody()))
+            if (entity.getBody().intersects(e.getBody()) && !e.equals(entity))
                 return true;
 
         return false;
@@ -211,6 +215,8 @@ public abstract class Level implements Updatable, Renderable
         {
             if (entity.getBody().intersects(coin.getBody()))
             {
+                onGoldCoinCollected(coin);
+
                 coin.flagAsCollected();
                 collided = true;
             }
@@ -219,16 +225,23 @@ public abstract class Level implements Updatable, Renderable
         return collided;
     }
 
-    public final void resetLevelAfterEnemyCollision()
+    private final void resetLevelAfterEnemyCollision()
     {
+        this.player.revive();
+        this.playerDied = true;
+
         if (this.coinsCollected > 0)
         {
             this.coinsCollected = 0;
             this.goldCoins.clear();
             initGoldCoins();
         }
+    }
 
-        this.stats.incrementDeaths();
+    private void onPlayerDeath()
+    {
+        for (Enemy e : this.enemies)
+            e.onPlayerDeath();
     }
 
     @Override
@@ -238,18 +251,38 @@ public abstract class Level implements Updatable, Renderable
         updateGoldCoins(gc, dt);
         updatePlayer(gc, dt);
 
-        updateLevelState();
+        checkLevelState();
     }
 
-    private void updateLevelState()
+    private void checkLevelState()
     {
-        if (playerHasWon())
+        if (this.player.hasDied())
+        {
+            onPlayerDeath();
+        }
+        else if (this.player.shouldRevive())
+        {
+            resetLevelAfterEnemyCollision();
+        }
+        else if (playerHasWon())
+        {
             this.levelCompleted = true;
+        }
     }
 
     private boolean playerHasWon()
     {
-        return this.endZone.contains(this.player.getCenterX(), this.player.getCenterY()) && this.coinsCollected == this.totalCoins;
+        return allCoinsCollected() && playerInEndZone();
+    }
+
+    private boolean playerInEndZone()
+    {
+        return this.endZone.contains(this.player.getCenterX(), this.player.getCenterY());
+    }
+
+    private boolean allCoinsCollected()
+    {
+        return this.coinsCollected == this.totalCoins;
     }
 
     @Override
@@ -259,12 +292,17 @@ public abstract class Level implements Updatable, Renderable
 
         renderZones(g);
 
-        //        g.setColor(Color.cyan);
-        //        g.draw(this.boundingPoly);
+        //drawBoundingPoly(g);
 
         renderEnemies(g);
         renderPlayer(g);
         renderGoldCoins(g);
+    }
+
+    private void drawBoundingPoly(Graphics g)
+    {
+        g.setColor(Color.cyan);
+        g.draw(this.boundingPoly);
     }
 
     private void renderZones(Graphics g)
@@ -276,6 +314,7 @@ public abstract class Level implements Updatable, Renderable
 
     private void updatePlayer(GameContainer gc, float dt)
     {
+        this.playerDied = false;
         this.player.update(gc, dt);
     }
 
@@ -304,6 +343,7 @@ public abstract class Level implements Updatable, Renderable
 
     private void renderPlayer(Graphics g)
     {
+        g.setColor(Color.white);
         this.player.render(g);
     }
 
@@ -333,6 +373,12 @@ public abstract class Level implements Updatable, Renderable
         }
     }
 
+    private void onGoldCoinCollected(GoldCoin coin)
+    {
+        for (Enemy e : this.enemies)
+            e.onCoinCollected(coin.getCenterX(), coin.getCenterY());
+    }
+
     public final boolean isLevelComplete()
     {
         return this.levelCompleted;
@@ -346,5 +392,10 @@ public abstract class Level implements Updatable, Renderable
     public final float getPlayerStartY()
     {
         return this.playerStartY;
+    }
+
+    public final boolean hasPlayerDied()
+    {
+        return this.playerDied;
     }
 }

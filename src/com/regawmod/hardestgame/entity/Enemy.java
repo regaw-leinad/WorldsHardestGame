@@ -9,7 +9,6 @@ import com.regawmod.hardestgame.level.Level;
 
 public abstract class Enemy extends MovableEntity
 {
-    public static final float[] BACKTRACK_COMPONENT = { -0.1f, 0.1f };
     public static final float ENEMY_RADIUS = 8;
 
     private boolean boundedByLevel;
@@ -39,25 +38,40 @@ public abstract class Enemy extends MovableEntity
     @Override
     public final void render(Graphics g)
     {
+        //drawBoundingShape(g);
+
+        drawBlueEnemy(g);
+        //        drawGreenFaceEnemy(g);
+    }
+
+    private void drawBoundingShape(Graphics g)
+    {
+        g.setColor(Color.cyan);
+        g.draw(this.getBody());
+    }
+
+    private void drawGreenFaceEnemy(Graphics g)
+    {
+
+        g.setColor(Color.black);
+        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        g.setColor(Color.green);
+        g.fillOval(this.getX() + 1, this.getY() + 1, this.getWidth() - 2, this.getHeight() - 2);
+
+        g.setColor(Color.black);
+        g.fillOval(this.getCenterX() - this.getWidth() / 4 - 1, this.getCenterY() - this.getWidth() / 4 + 1, 2, 2);
+        g.fillOval(this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() - this.getWidth() / 4 + 1, 2, 2);
+
+        g.drawLine(this.getCenterX() - this.getWidth() / 4, this.getCenterY() + this.getWidth() / 4 - 1,
+                this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() + this.getWidth() / 4 - 1);
+    }
+
+    private void drawBlueEnemy(Graphics g)
+    {
         g.setColor(Color.black);
         g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         g.setColor(Color.blue);
         g.fillOval(this.getX() + 3, this.getY() + 3, this.getWidth() - 6, this.getHeight() - 6);
-
-        //        g.setColor(Color.cyan);
-        //        g.draw(this.getBody());
-
-        //        g.setColor(Color.black);
-        //        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        //        g.setColor(Color.green);
-        //        g.fillOval(this.getX() + 1, this.getY() + 1, this.getWidth() - 2, this.getHeight() - 2);
-        //
-        //        g.setColor(Color.black);
-        //        g.fillOval(this.getCenterX() - this.getWidth() / 4 - 1, this.getCenterY() - this.getWidth() / 4 + 1, 2, 2);
-        //        g.fillOval(this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() - this.getWidth() / 4 + 1, 2, 2);
-        //
-        //        g.drawLine(this.getCenterX() - this.getWidth() / 4, this.getCenterY() + this.getWidth() / 4 - 1,
-        //                this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() + this.getWidth() / 4 - 1);
     }
 
     public boolean isBoundedByLevel()
@@ -80,13 +94,11 @@ public abstract class Enemy extends MovableEntity
         return this.level.collidesWithZones(this);
     }
 
-    protected float getBactrackComponent()
+    public void onCoinCollected(float coinX, float coinY)
     {
-        return BACKTRACK_COMPONENT[Float.floatToIntBits(this.speed) >>> 31];
     }
 
-    protected void turnAround()
+    public void onPlayerDeath()
     {
-        this.speed *= -1;
     }
 }

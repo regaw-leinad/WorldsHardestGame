@@ -8,9 +8,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import com.regawmod.hardestgame.GameMain;
 
 public class LevelCompleteGameState extends AbstractGameState
 {
+    public LevelCompleteGameState(GameMain gameMain)
+    {
+    }
+
     @Override
     public void init(GameContainer gc, StateBasedGame game) throws SlickException
     {
@@ -25,7 +30,6 @@ public class LevelCompleteGameState extends AbstractGameState
 
         g.drawString("You won that level!", 300, 250);
         g.drawString("Press SPACE to play the next level!", 230, 270);
-
     }
 
     @Override

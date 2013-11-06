@@ -15,10 +15,14 @@ public final class Player extends MovableEntity
     public static final float FADE_ALPHA_PER_SEC = 1.5f;
 
     private Level level;
+
     private boolean collidedWithEnemy;
 
     private Color outsideColor;
     private Color insideColor;
+
+    private boolean isDying;
+    private boolean shouldRevive;
 
     public Player(Level level)
     {
@@ -26,6 +30,8 @@ public final class Player extends MovableEntity
 
         this.level = level;
         this.collidedWithEnemy = false;
+        this.isDying = false;
+        this.shouldRevive = false;
         this.outsideColor = new Color(Color.black);
         this.insideColor = new Color(Color.red);
     }
@@ -33,8 +39,10 @@ public final class Player extends MovableEntity
     @Override
     public final void update(GameContainer gc, float dt)
     {
-        if (this.collidedWithEnemy)
+        if (this.isDying)
         {
+            this.collidedWithEnemy = false;
+
             this.insideColor.a -= FADE_ALPHA_PER_SEC * dt;
             this.outsideColor.a -= FADE_ALPHA_PER_SEC * dt;
 
@@ -61,11 +69,11 @@ public final class Player extends MovableEntity
 
     private void resetLevel()
     {
-        this.level.resetLevelAfterEnemyCollision();
-
+        //        this.level.resetLevelAfterEnemyCollision();
+        this.shouldRevive = true;
+        this.collidedWithEnemy = false;
         resetColor();
         resetPosition();
-        this.collidedWithEnemy = false;
     }
 
     private void resetColor()
@@ -82,7 +90,7 @@ public final class Player extends MovableEntity
 
     private void checkEnemyCollision()
     {
-        this.collidedWithEnemy = this.level.collidesWithEnemy(this);
+        this.collidedWithEnemy = this.isDying = this.level.collidesWithEnemy(this);
     }
 
     private void updateX(Input input, float distance)
@@ -145,7 +153,6 @@ public final class Player extends MovableEntity
 
     private void drawPlayer(Graphics g)
     {
-
         g.setColor(this.outsideColor);
         g.fillRect(this.getX() + 1, this.getY() + 1, this.getWidth() - 1, this.getHeight() - 1);
         g.setColor(this.insideColor);
@@ -158,5 +165,21 @@ public final class Player extends MovableEntity
     private boolean collidedWithWall()
     {
         return this.level.collidesWithWall(this);
+    }
+
+    public boolean hasDied()
+    {
+        return this.collidedWithEnemy;
+    }
+
+    public boolean shouldRevive()
+    {
+        return this.shouldRevive;
+    }
+
+    public void revive()
+    {
+        this.shouldRevive = false;
+        this.isDying = false;
     }
 }

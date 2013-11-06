@@ -34,7 +34,7 @@ public class CirclingEnemy extends Enemy
         this.setCenterY((float)(this.revolveAroundY + this.radius * Math.sin(angle)));
     }
 
-    public static List<Enemy> getCircleGroupEnemy(Level level, float centerX, float centerY, int numOfLayers, int enemPerLayer, float initRadius, float indivRadius, double speed, float bladeAngle)
+    public static List<Enemy> getCircleGroupEnemy(Level level, float centerX, float centerY, int numOfLayers, int enemPerLayer, float initRadius, float indivRadius, double speed, double bladeAngle)
     {
         ArrayList<Enemy> result = new ArrayList<Enemy>();
 

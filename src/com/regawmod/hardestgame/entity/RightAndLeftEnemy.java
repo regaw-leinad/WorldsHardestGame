@@ -19,7 +19,7 @@ public class RightAndLeftEnemy extends Enemy
         if (this.collidesWithWall() || this.collidesWithZone())
         {
             while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveX(this.getBactrackComponent());
+                this.moveX(this.getBactrackComponent(dt));
 
             this.turnAround();
         }

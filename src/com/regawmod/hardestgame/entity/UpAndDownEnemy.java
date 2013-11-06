@@ -19,7 +19,7 @@ public class UpAndDownEnemy extends Enemy
         if (this.collidesWithWall() || this.collidesWithZone())
         {
             while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveY(this.getBactrackComponent());
+                this.moveY(this.getBactrackComponent(dt));
 
             this.turnAround();
         }

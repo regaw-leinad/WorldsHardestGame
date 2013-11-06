@@ -1,19 +1,24 @@
 package com.regawmod.hardestgame;
 
-public class GameStats
+public class GameData
 {
     private int currentLevel;
     private int amountOfDeaths;
 
-    public GameStats()
+    public GameData()
     {
-        this.currentLevel = 1;
+        this.currentLevel = 0;
         this.amountOfDeaths = 0;
     }
 
     public void incrementDeaths()
     {
         this.amountOfDeaths++;
+    }
+
+    public void setCurrentLevel(int level)
+    {
+        this.currentLevel = level;
     }
 
     public void incrementLevel()
