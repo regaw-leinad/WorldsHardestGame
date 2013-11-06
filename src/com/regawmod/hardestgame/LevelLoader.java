@@ -24,13 +24,17 @@ class ClassFilter implements FilenameFilter
 
 public class LevelLoader
 {
+    public static final String LEVEL_DIRECTORY = System.getProperty("user.dir") + File.separator + "levels";
+    public static final String LEVEL_RES_DIRECTORY = LEVEL_DIRECTORY + File.separator + "res";
+    public static final String LEVEL_CLASS = "com.regawmod.hardestgame.level.Level";
+
     private static final Class[] parameters = new Class[] { URL.class };
     private static List<Class<? extends Level>> pluginCollection;
 
     static
     {
         pluginCollection = new ArrayList<Class<? extends Level>>();
-        loadLevels(System.getProperty("user.dir") + File.separator + "levels");
+        loadLevels(LEVEL_DIRECTORY);
     }
 
     public static void loadLevels(String directory)
@@ -54,7 +58,7 @@ public class LevelLoader
                     Class clazz = getClass(f, name);
                     Class superClass = clazz.getSuperclass();
 
-                    if (superClass.getName().equals("com.regawmod.hardestgame.level.Level"))
+                    if (superClass.getName().equals(LEVEL_CLASS))
                         pluginCollection.add(clazz);
                 }
             }
@@ -71,17 +75,10 @@ public class LevelLoader
         ArrayList<String> classes = new ArrayList<String>(10);
         JarInputStream jarFile = new JarInputStream(new FileInputStream(jarName));
         JarEntry jarEntry;
-        while (true)
+        while ((jarEntry = jarFile.getNextJarEntry()) != null)
         {
-            jarEntry = jarFile.getNextJarEntry();
-            if (jarEntry == null)
-            {
-                break;
-            }
             if (jarEntry.getName().endsWith(".class"))
-            {
                 classes.add(jarEntry.getName().replaceAll("/", "\\."));
-            }
         }
 
         jarFile.close();
@@ -140,5 +137,4 @@ public class LevelLoader
     {
         return pluginCollection.get(i).newInstance();
     }
-
 }

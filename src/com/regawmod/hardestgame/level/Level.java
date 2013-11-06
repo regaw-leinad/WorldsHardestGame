@@ -1,15 +1,14 @@
 package com.regawmod.hardestgame.level;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 import com.regawmod.entity.Entity;
+import com.regawmod.hardestgame.Resources;
 import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.entity.Player;
@@ -107,16 +106,9 @@ public abstract class Level implements Updatable, Renderable
 
     private void loadLevelImage()
     {
-        try
-        {
-            this.levelImage = new Image(System.getProperty("user.dir") + File.separator + "levels"
-                    + File.separator + "res" + File.separator + this.getClass().getSimpleName() + ".png");
-        }
-        catch (SlickException e)
-        {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        this.levelImage = Resources.getLevelImage(this.getClass().getSimpleName());
+        System.out.println();
+        //new Image(LevelLoader.LEVEL_RES_DIRECTORY + File.separator + this.getClass().getSimpleName() + ".png");
     }
 
     protected abstract void initBoundingPolygon();
