@@ -2,14 +2,31 @@ package com.regawmod.hardestgame.entity;
 
 import com.regawmod.hardestgame.level.Level;
 
+/**
+ * An enemy that responds to the player collecting coins.
+ * 
+ * @author Dan Wager
+ */
 public class CoinWatcherEnemy extends Enemy
 {
+    /** If the enemy has made it to it's desired location */
     private boolean inPosition;
+    /** The distance from the enemy to the target location */
     private double totalDistance;
+    /** The angle of travel */
     private double theta;
+    /** The start X coordinate */
     private float startX;
+    /** The start Y coordinate */
     private float startY;
 
+    /**
+     * Creates a new {@link CoinWatcherEnemy}.
+     * 
+     * @param x The enemy's X position
+     * @param y The enemy's Y position
+     * @param level The level
+     */
     public CoinWatcherEnemy(float x, float y, Level level)
     {
         super(x, y, level);
@@ -52,6 +69,11 @@ public class CoinWatcherEnemy extends Enemy
         }
     }
 
+    /**
+     * Moves the enemy based on delta time
+     * 
+     * @param dt Delta time
+     */
     private void moveEnemy(float dt)
     {
         this.moveX((float)(Math.cos(theta) * getSpeed() * dt));

@@ -2,21 +2,35 @@ package com.regawmod.hardestgame.entity;
 
 import com.regawmod.hardestgame.level.Level;
 
+/**
+ * An enemy that is aware of the player and follows the player slowly.
+ * 
+ * @author Dan Wager
+ */
 public class AwareEnemy extends Enemy
 {
+    /** The current level */
     private Level level;
+    /** The current angle of travel */
     private double theta;
+    /** If we should track the player or not */
     private boolean shouldTrack;
 
+    /**
+     * Creates a new {@link AwareEnemy}.
+     * 
+     * @param x The enemy's X position
+     * @param y Then enemy's Y position
+     * @param level The level
+     */
     public AwareEnemy(float x, float y, Level level)
     {
         super(x, y, level);
 
         this.level = level;
+        this.shouldTrack = true;
 
         setSpeed(30f);
-
-        this.shouldTrack = true;
     }
 
     @Override
@@ -29,12 +43,23 @@ public class AwareEnemy extends Enemy
         }
     }
 
+    /**
+     * Moves the enemy towards the player
+     * 
+     * @param dt Delta time
+     */
     private void moveEnemy(float dt)
     {
         this.moveX((float)(Math.cos(theta) * this.getSpeed() * dt));
         this.moveY((float)(Math.sin(theta) * this.getSpeed() * dt));
     }
 
+    /**
+     * Calculates theta based on positions
+     * 
+     * @param toX X coordinate of end point
+     * @param toY Y coordinate of end point
+     */
     private void calculateTheta(float toX, float toY)
     {
         this.theta = Math.atan2(toY - this.getCenterY(), toX - this.getCenterX());

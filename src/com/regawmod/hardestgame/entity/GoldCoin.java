@@ -7,14 +7,30 @@ import org.newdawn.slick.geom.Circle;
 import com.regawmod.entity.Entity;
 import com.regawmod.hardestgame.level.Level;
 
+/**
+ * A gold coin that the player must collect
+ * 
+ * @author Dan Wager
+ */
 public class GoldCoin extends Entity
 {
+    /** How fast the coin fades out on collection */
     public static final float FADE_ALPHA_PER_SEC = 2f;
 
+    /** The fill color of the coin */
     private Color insideColor;
+    /** The border color of the coin */
     private Color outsideColor;
+    /** If the coin has been collected */
     private boolean collected;
 
+    /**
+     * Creates a new {@link GoldCoin}.
+     * 
+     * @param x The coin's X position
+     * @param y The coin's Y postition
+     * @param level The level
+     */
     public GoldCoin(float x, float y, Level level)
     {
         super(new Circle(x, y, 6));
@@ -24,11 +40,19 @@ public class GoldCoin extends Entity
         this.collected = false;
     }
 
+    /**
+     * Sets the collected flag.
+     */
     public void flagAsCollected()
     {
         this.collected = true;
     }
 
+    /**
+     * Gets a value indicating if the coin has been collected.
+     * 
+     * @return If the coin has been collected
+     */
     public boolean hasBeenCollected()
     {
         return this.collected;
