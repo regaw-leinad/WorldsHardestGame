@@ -3,6 +3,11 @@ package com.regawmod.hardestgame;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
+/**
+ * The main entry point for the game
+ * 
+ * @author Dan Wager
+ */
 public class MainEntryPoint
 {
     public static void main(String[] args)

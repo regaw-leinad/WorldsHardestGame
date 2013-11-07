@@ -19,13 +19,14 @@ public class CirclingEnemy extends Enemy
         this.revolveAroundY = cY;
         this.radius = radius;
         this.angle = initAngle;
-        this.speed = (float)radiansPerSecond;
+
+        setSpeed((float)radiansPerSecond);
     }
 
     @Override
     public void update(float dt)
     {
-        this.angle += this.speed * dt;
+        this.angle += getSpeed() * dt;
 
         if (this.angle >= 2 * Math.PI)
             this.angle -= 2 * Math.PI;

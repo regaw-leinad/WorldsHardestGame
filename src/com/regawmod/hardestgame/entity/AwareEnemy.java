@@ -4,69 +4,56 @@ import com.regawmod.hardestgame.level.Level;
 
 public class AwareEnemy extends Enemy
 {
-    private boolean inPosition;
-    private double totalDistance;
+    private Level level;
     private double theta;
-    private float startX;
-    private float startY;
+    private boolean shouldTrack;
 
     public AwareEnemy(float x, float y, Level level)
     {
         super(x, y, level);
 
-        this.inPosition = true;
-        setSpeed(100f);
+        this.level = level;
 
-        this.startX = x;
-        this.startY = y;
+        setSpeed(30f);
+
+        this.shouldTrack = true;
     }
 
     @Override
     protected void update(float dt)
     {
-        if (!inPosition)
+        if (this.shouldTrack)
         {
-            setSpeed(100f);
-
-            if (this.totalDistance <= 0)
-                inPosition = true;
-            else
-                moveEnemy(dt);
-        }
-        else
-        {
-            this.moveY(this.speed * dt);
-
-            if (this.collidesWithWall() || this.collidesWithZone())
-            {
-                while (this.collidesWithWall() || this.collidesWithZone())
-                    this.moveY(this.getBactrackComponent(dt));
-
-                this.turnAround();
-            }
+            calculateTheta(this.level.getPlayerX(), this.level.getPlayerY());
+            moveEnemy(dt);
         }
     }
 
     private void moveEnemy(float dt)
     {
-        this.moveX((float)(Math.cos(theta) * this.speed * dt));
-        this.moveY((float)(Math.sin(theta) * this.speed * dt));
+        this.moveX((float)(Math.cos(theta) * this.getSpeed() * dt));
+        this.moveY((float)(Math.sin(theta) * this.getSpeed() * dt));
+    }
 
-        totalDistance -= this.speed * dt;
+    private void calculateTheta(float toX, float toY)
+    {
+        this.theta = Math.atan2(toY - this.getCenterY(), toX - this.getCenterX());
     }
 
     @Override
-    public void onCoinCollected(float coinX, float coinY)
+    public void onCoinCollected(float coinX, float coinY, int coinsRemaining)
     {
-        this.inPosition = false;
-
-        this.theta = Math.atan2(coinY - this.getCenterY(), coinX - this.getCenterX());
-        totalDistance = Math.hypot(coinX - this.getCenterX(), coinY - this.getCenterY());
     }
 
     @Override
     public void onPlayerDeath()
     {
-        onCoinCollected(this.startX, this.startY);
+        this.shouldTrack = false;
+    }
+
+    @Override
+    public void onPlayerRespawn()
+    {
+        this.shouldTrack = true;
     }
 }

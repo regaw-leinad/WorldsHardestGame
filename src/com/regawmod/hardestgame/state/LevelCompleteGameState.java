@@ -12,8 +12,11 @@ import com.regawmod.hardestgame.GameMain;
 
 public class LevelCompleteGameState extends AbstractGameState
 {
+    private GameMain gameMain;
+
     public LevelCompleteGameState(GameMain gameMain)
     {
+        this.gameMain = gameMain;
     }
 
     @Override
@@ -37,6 +40,12 @@ public class LevelCompleteGameState extends AbstractGameState
     {
         if (gc.getInput().isKeyPressed(Input.KEY_SPACE))
             game.enterState(GameState.IN_GAME, new FadeOutTransition(), new FadeInTransition());
+    }
+
+    @Override
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException
+    {
+        this.gameMain.incrementLevel();
     }
 
     @Override

@@ -52,7 +52,6 @@ public abstract class Enemy extends MovableEntity
 
     private void drawGreenFaceEnemy(Graphics g)
     {
-
         g.setColor(Color.black);
         g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         g.setColor(Color.green);
@@ -94,11 +93,15 @@ public abstract class Enemy extends MovableEntity
         return this.level.collidesWithZones(this);
     }
 
-    public void onCoinCollected(float coinX, float coinY)
+    public void onCoinCollected(float coinX, float coinY, int coinsRemaining)
     {
     }
 
     public void onPlayerDeath()
+    {
+    }
+
+    public void onPlayerRespawn()
     {
     }
 }

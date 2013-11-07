@@ -14,7 +14,7 @@ public class UpAndDownEnemy extends Enemy
     @Override
     public void update(float dt)
     {
-        this.moveY(this.speed * dt);
+        this.moveY(getSpeed() * dt);
 
         if (this.collidesWithWall() || this.collidesWithZone())
         {

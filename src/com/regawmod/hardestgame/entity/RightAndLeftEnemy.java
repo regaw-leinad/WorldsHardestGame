@@ -14,7 +14,7 @@ public class RightAndLeftEnemy extends Enemy
     @Override
     public void update(float dt)
     {
-        this.moveX(this.speed * dt);
+        this.moveX(getSpeed() * dt);
 
         if (this.collidesWithWall() || this.collidesWithZone())
         {

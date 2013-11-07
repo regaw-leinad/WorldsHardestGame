@@ -1,13 +1,18 @@
 package com.regawmod.hardestgame;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+/**
+ * Handles loading/getting resources
+ * 
+ * @author Dan Wager
+ */
 public class Resources
 {
+    /** The collection of images */
     private static Map<String, Image> images;
 
     static
@@ -20,18 +25,18 @@ public class Resources
         Image result = images.get(name);
 
         if (result == null)
-            return loadImage(name, LevelLoader.LEVEL_RES_DIRECTORY);
+            return loadImage(name);
 
         return result;
     }
 
-    private static Image loadImage(String name, String path)
+    private static Image loadImage(String name)
     {
         Image load = null;
 
         try
         {
-            load = new Image(path + File.separator + name + ".png");
+            load = new Image("res/" + name + ".png");
         }
         catch (SlickException e)
         {

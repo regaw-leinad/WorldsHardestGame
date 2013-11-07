@@ -107,7 +107,6 @@ public abstract class Level implements Updatable, Renderable
     private void loadLevelImage()
     {
         this.levelImage = Resources.getLevelImage(this.getClass().getSimpleName());
-        System.out.println();
         //new Image(LevelLoader.LEVEL_RES_DIRECTORY + File.separator + this.getClass().getSimpleName() + ".png");
     }
 
@@ -161,6 +160,16 @@ public abstract class Level implements Updatable, Renderable
         this.goldCoins.add(goldCoin);
     }
 
+    public final float getPlayerX()
+    {
+        return this.player.getCenterX();
+    }
+
+    public final float getPlayerY()
+    {
+        return this.player.getCenterY();
+    }
+
     protected final void addBoundingPolygonPoint(float x, float y)
     {
         this.boundingPoly.addPoint(x, y + LEVEL_OFFSET);
@@ -184,10 +193,10 @@ public abstract class Level implements Updatable, Renderable
 
     public final boolean collidesWithWall(Entity entity)
     {
-        // We need this !contains because large deltas 
+        // We need this !contains instead of intersects because large deltas 
         // might bring the entity outside of the bounding poly
+
         return !this.boundingPoly.contains(entity.getBody());
-        //        return boundingPoly.intersects(entity.getBody());
     }
 
     public final boolean collidesWithEnemy(Entity entity)
@@ -205,7 +214,7 @@ public abstract class Level implements Updatable, Renderable
 
         for (GoldCoin coin : this.goldCoins)
         {
-            if (entity.getBody().intersects(coin.getBody()))
+            if (!coin.hasBeenCollected() && entity.getBody().intersects(coin.getBody()))
             {
                 onGoldCoinCollected(coin);
 
@@ -228,6 +237,9 @@ public abstract class Level implements Updatable, Renderable
             this.goldCoins.clear();
             initGoldCoins();
         }
+
+        for (Enemy e : this.enemies)
+            e.onPlayerRespawn();
     }
 
     private void onPlayerDeath()
@@ -368,7 +380,7 @@ public abstract class Level implements Updatable, Renderable
     private void onGoldCoinCollected(GoldCoin coin)
     {
         for (Enemy e : this.enemies)
-            e.onCoinCollected(coin.getCenterX(), coin.getCenterY());
+            e.onCoinCollected(coin.getCenterX(), coin.getCenterY(), this.totalCoins - this.coinsCollected);
     }
 
     public final boolean isLevelComplete()

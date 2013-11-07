@@ -4,13 +4,12 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 import com.regawmod.hardestgame.GameMain;
 
 public class MainMenuState extends AbstractGameState
 {
-    private TrueTypeFont gameFont;
+    //private TrueTypeFont gameFont;
     private GameMain gameMain;
 
     public MainMenuState(GameMain game)
@@ -21,9 +20,7 @@ public class MainMenuState extends AbstractGameState
     @Override
     public void init(GameContainer gc, StateBasedGame game) throws SlickException
     {
-        System.out.println("loading font");
         //gameFont = new TrueTypeFont(new Font("Veranda", Font.BOLD, 40), true);
-        System.out.println("loaded font");
     }
 
     @Override

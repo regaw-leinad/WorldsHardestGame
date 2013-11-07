@@ -52,7 +52,7 @@ public final class Player extends MovableEntity
         else
         {
             Input input = gc.getInput();
-            float distance = this.speed * dt;
+            float distance = getSpeed() * dt;
 
             updateY(input, distance);
             updateX(input, distance);
@@ -97,23 +97,23 @@ public final class Player extends MovableEntity
     {
         float dx = 0;
 
-        if (input.isKeyDown(Input.KEY_A))
+        if (input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT))
             dx -= distance;
 
-        if (input.isKeyDown(Input.KEY_D))
+        if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT))
             dx += distance;
 
         moveAndCheckCollisionsX(dx);
     }
 
-    private void updateY(Input in, float distance)
+    private void updateY(Input input, float distance)
     {
         float dy = 0;
 
-        if (in.isKeyDown(Input.KEY_W))
+        if (input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP))
             dy -= distance;
 
-        if (in.isKeyDown(Input.KEY_S))
+        if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN))
             dy += distance;
 
         moveAndCheckCollisionsY(dy);
