@@ -27,7 +27,15 @@ public abstract class Level implements Updatable, Renderable
 
     /** The player in the level */
     private Player player;
+    /** The player's starting X coordinate */
+    private float playerStartX;
+    /** The player's starting Y coordinate */
+    private float playerStartY;
+    /** If the player has died */
+    private boolean playerDied;
 
+    /** The level's background image */
+    private Image levelImage;
     /** Our level's bounding polygon */
     private Polygon boundingPoly;
     /** The bounding poly for the start zone */
@@ -37,29 +45,18 @@ public abstract class Level implements Updatable, Renderable
     /** The color for the zones */
     private Color zoneColor;
 
+    /** If the level has been completed */
+    private boolean levelCompleted;
+
     /** The collection of enemies in the level */
     private List<Enemy> enemies;
     /** The colection of gold coins in the level */
     private List<GoldCoin> goldCoins;
 
-    /** The level's background image */
-    private Image levelImage;
-
     /** The number of gold coings collected by the player */
     private int coinsCollected;
     /** The total number of coins in the level */
     private int totalCoins;
-
-    /** If the level has been completed */
-    private boolean levelCompleted;
-
-    /** The player's starting X coordinate */
-    private float playerStartX;
-    /** The player's starting Y coordinate */
-    private float playerStartY;
-
-    /** If the player has died */
-    private boolean playerDied;
 
     /**
      * Creates a new {@link Level}.
@@ -77,6 +74,10 @@ public abstract class Level implements Updatable, Renderable
 
         this.playerStartX = 0;
         this.playerStartY = 0;
+        this.playerDied = false;
+
+        this.levelCompleted = false;
+        this.coinsCollected = 0;
 
         loadLevelImage();
 
@@ -91,102 +92,28 @@ public abstract class Level implements Updatable, Renderable
         initGoldCoins();
 
         this.totalCoins = this.goldCoins.size();
-        this.coinsCollected = 0;
-
-        this.levelCompleted = false;
-
-        this.playerDied = false;
     }
 
     /**
-     * Sets the player's starting position.
+     * Adds a point to the level's bounding polygon.
      * 
      * @param x The X coordinate
      * @param y The Y coordinate
      */
-    protected final void setPlayerStartPosition(float x, float y)
+    protected final void addBoundingPolygonPoint(float x, float y)
     {
-        this.playerStartX = x;
-        this.playerStartY = y + LEVEL_OFFSET;
-
-        this.player = new Player(this);
+        this.boundingPoly.addPoint(x, y + LEVEL_OFFSET);
     }
 
     /**
-     * Checks that the bounding polygons have been set up correctly.
-     * Also makes sure that the player starts in the start zone.
-     */
-    private void checkZoneStates()
-    {
-        if (this.boundingPoly.getPointCount() < 4)
-            throw new IllegalStateException("Bounding polygon is not set up correctly!");
-
-        if (this.startZone.getPointCount() < 4)
-            throw new IllegalStateException("Start zone is not set up correctly!");
-
-        if (this.endZone.getPointCount() < 4)
-            throw new IllegalStateException("End zone is not set up correctly!");
-
-        if (!this.startZone.contains(this.player.getBody()))
-            throw new IllegalStateException("Player must start in the Start zone.");
-    }
-
-    /**
-     * Loads the level image so we can render it.
-     */
-    private void loadLevelImage()
-    {
-        this.levelImage = Resources.getLevelImage(this.getClass().getSimpleName());
-        //new Image(LevelLoader.LEVEL_RES_DIRECTORY + File.separator + this.getClass().getSimpleName() + ".png");
-    }
-
-    /**
-     * Initialize the bounding polygon for the level here.
-     * Must initialize in clockwise order.
-     */
-    protected abstract void initBoundingPolygon();
-
-    /**
-     * Initialize the bounding polygon for the start zone here.
-     * Must initialize in clockwise order.
-     */
-    protected abstract void initStartZonePolygon();
-
-    /**
-     * Initialize the bounding polygon for the end zone here.
-     * Must initialize in clockwise order.
-     */
-    protected abstract void initEndZonePolygon();
-
-    /**
-     * Initialize the player's start position here.
-     */
-    protected abstract void initPlayerStartPosition();
-
-    /**
-     * Initialize and add the enemies for the level here.
-     */
-    protected abstract void initEnemies();
-
-    /**
-     * Initialize and add the gold coins for the level here.
-     */
-    protected abstract void initGoldCoins();
-
-    /**
-     * Adds an enemy to the level.
+     * Adds a point to the end zone's bounding polygon.
      * 
-     * @param enemy The enemy to add to the level
+     * @param x The X coordinate
+     * @param y The Y coordinate
      */
-    protected final void addEnemy(Enemy enemy)
+    protected final void addEndZonePolygonPoint(float x, float y)
     {
-        enemy.setCenterY(enemy.getCenterY() + LEVEL_OFFSET);
-
-        if (enemy.isBoundedByLevel() && !this.boundingPoly.contains(enemy.getBody()))
-            throw new IllegalStateException("Bounded Enemy at x:" + enemy.getCenterX() + " y:" +
-                    (enemy.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
-
-        this.enemies.add(enemy);
+        this.endZone.addPoint(x, y + LEVEL_OFFSET);
     }
 
     /**
@@ -209,6 +136,22 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
+     * Adds an enemy to the level.
+     * 
+     * @param enemy The enemy to add to the level
+     */
+    protected final void addEnemy(Enemy enemy)
+    {
+        enemy.setCenterY(enemy.getCenterY() + LEVEL_OFFSET);
+
+        if (enemy.isBoundedByLevel() && !this.boundingPoly.contains(enemy.getBody()))
+            throw new IllegalStateException("Bounded Enemy at x:" + enemy.getCenterX() + " y:" +
+                    (enemy.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
+
+        this.enemies.add(enemy);
+    }
+
+    /**
      * Adds a gold coin to the level.
      * 
      * @param goldCoin The gold coin to add
@@ -225,37 +168,6 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Gets a value indicating the player's current X position.
-     * 
-     * @return The player's current X position
-     */
-    public final float getPlayerX()
-    {
-        return this.player.getCenterX();
-    }
-
-    /**
-     * Gets a value indicating the player's current Y position.
-     * 
-     * @return The player's current Y position
-     */
-    public final float getPlayerY()
-    {
-        return this.player.getCenterY();
-    }
-
-    /**
-     * Adds a point to the level's bounding polygon.
-     * 
-     * @param x The X coordinate
-     * @param y The Y coordinate
-     */
-    protected final void addBoundingPolygonPoint(float x, float y)
-    {
-        this.boundingPoly.addPoint(x, y + LEVEL_OFFSET);
-    }
-
-    /**
      * Adds a point to the start zone's bounding polygon.
      * 
      * @param x The X coordinate
@@ -267,40 +179,52 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Adds a point to the end zone's bounding polygon.
+     * Gets a value indicating if all of the gold coins have been collected.
      * 
-     * @param x The X coordinate
-     * @param y The Y coordinate
+     * @return If all of the gold coins have been collected
      */
-    protected final void addEndZonePolygonPoint(float x, float y)
+    private boolean allCoinsCollected()
     {
-        this.endZone.addPoint(x, y + LEVEL_OFFSET);
+        return this.coinsCollected == this.totalCoins;
     }
 
     /**
-     * Gets a value indicating if the entity collided with the start or end zone.
-     * 
-     * @param entity The entity to check for collisions
-     * @return If the entity collided with the start or end zone
+     * Checks the ending conditions of the level.
+     * Has the level been completed?
      */
-    public final boolean collidesWithZones(Entity entity)
+    private void checkLevelState()
     {
-        return entity.getBody().intersects(this.startZone) || this.startZone.contains(entity.getBody()) ||
-                entity.getBody().intersects(this.endZone) || this.endZone.contains(entity.getBody());
+        if (this.player.hasDied())
+        {
+            onPlayerDeath();
+        }
+        else if (this.player.shouldRevive())
+        {
+            resetLevelAfterEnemyCollision();
+        }
+        else if (playerHasWon())
+        {
+            this.levelCompleted = true;
+        }
     }
 
     /**
-     * Gets a value indicating if the entity collided with the level walls.
-     * 
-     * @param entity The entity to check for collisions
-     * @return If the entity collided with the level walls
+     * Checks that the bounding polygons have been set up correctly.
+     * Also makes sure that the player starts in the start zone.
      */
-    public final boolean collidesWithWall(Entity entity)
+    private void checkZoneStates()
     {
-        // We need this !contains instead of intersects because large deltas 
-        // might bring the entity outside of the bounding poly
+        if (this.boundingPoly.getPointCount() < 4)
+            throw new IllegalStateException("Bounding polygon is not set up correctly!");
 
-        return !this.boundingPoly.contains(entity.getBody());
+        if (this.startZone.getPointCount() < 4)
+            throw new IllegalStateException("Start zone is not set up correctly!");
+
+        if (this.endZone.getPointCount() < 4)
+            throw new IllegalStateException("End zone is not set up correctly!");
+
+        if (!this.startZone.contains(this.player.getBody()))
+            throw new IllegalStateException("Player must start in the Start zone.");
     }
 
     /**
@@ -343,32 +267,142 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Resets the level after a player has died.
-     * "Revives" the player.
-     * Resets all gold coins to original positions.
+     * Gets a value indicating if the entity collided with the level walls.
+     * 
+     * @param entity The entity to check for collisions
+     * @return If the entity collided with the level walls
      */
-    private final void resetLevelAfterEnemyCollision()
+    public final boolean collidesWithWall(Entity entity)
     {
-        this.player.revive();
-        this.playerDied = true;
+        // We need this !contains instead of intersects because large deltas 
+        // might bring the entity outside of the bounding poly
 
-        if (this.coinsCollected > 0)
-        {
-            this.coinsCollected = 0;
-            this.goldCoins.clear();
-            initGoldCoins();
-        }
-
-        onPlayerRespawn();
+        return !this.boundingPoly.contains(entity.getBody());
     }
 
     /**
-     * Notifies all enemies that the player has just respawned.
+     * Gets a value indicating if the entity collided with the start or end zone.
+     * 
+     * @param entity The entity to check for collisions
+     * @return If the entity collided with the start or end zone
      */
-    private void onPlayerRespawn()
+    public final boolean collidesWithZones(Entity entity)
+    {
+        return entity.getBody().intersects(this.startZone) || this.startZone.contains(entity.getBody()) ||
+                entity.getBody().intersects(this.endZone) || this.endZone.contains(entity.getBody());
+    }
+
+    /**
+     * Gets a value indicating the starting X coordinate of the player.
+     * 
+     * @return The starting X coordinate of the player
+     */
+    public final float getPlayerStartX()
+    {
+        return this.playerStartX;
+    }
+
+    /**
+     * Gets a value indicating the starting Y coordinate of the player.
+     * 
+     * @return The starting Y coordinate of the player
+     */
+    public final float getPlayerStartY()
+    {
+        return this.playerStartY;
+    }
+
+    /**
+     * Gets a value indicating the player's current X position.
+     * 
+     * @return The player's current X position
+     */
+    public final float getPlayerX()
+    {
+        return this.player.getCenterX();
+    }
+
+    /**
+     * Gets a value indicating the player's current Y position.
+     * 
+     * @return The player's current Y position
+     */
+    public final float getPlayerY()
+    {
+        return this.player.getCenterY();
+    }
+
+    /**
+     * Gets a value indicating if the player has died.
+     * 
+     * @return If the player has died
+     */
+    public final boolean hasPlayerDied()
+    {
+        return this.playerDied;
+    }
+
+    /**
+     * Initialize the bounding polygon for the level here.
+     * Must initialize in clockwise order.
+     */
+    protected abstract void initBoundingPolygon();
+
+    /**
+     * Initialize the bounding polygon for the end zone here.
+     * Must initialize in clockwise order.
+     */
+    protected abstract void initEndZonePolygon();
+
+    /**
+     * Initialize and add the enemies for the level here.
+     */
+    protected abstract void initEnemies();
+
+    /**
+     * Initialize and add the gold coins for the level here.
+     */
+    protected abstract void initGoldCoins();
+
+    /**
+     * Initialize the player's start position here.
+     */
+    protected abstract void initPlayerStartPosition();
+
+    /**
+     * Initialize the bounding polygon for the start zone here.
+     * Must initialize in clockwise order.
+     */
+    protected abstract void initStartZonePolygon();
+
+    /**
+     * Gets a value indicating if the level has been completed.
+     * 
+     * @return If the level has been completed
+     */
+    public final boolean isLevelComplete()
+    {
+        return this.levelCompleted;
+    }
+
+    /**
+     * Loads the level image so we can render it.
+     */
+    private void loadLevelImage()
+    {
+        this.levelImage = Resources.getLevelImage(this.getClass().getSimpleName());
+        //new Image(LevelLoader.LEVEL_RES_DIRECTORY + File.separator + this.getClass().getSimpleName() + ".png");
+    }
+
+    /**
+     * Notifies all enemies that the player has collected a gold coin.
+     * 
+     * @param coin The coin that was collected
+     */
+    private void onGoldCoinCollected(GoldCoin coin)
     {
         for (Enemy e : this.enemies)
-            e.onPlayerRespawn();
+            e.onCoinCollected(coin.getCenterX(), coin.getCenterY(), this.totalCoins - this.coinsCollected);
     }
 
     /**
@@ -380,34 +414,13 @@ public abstract class Level implements Updatable, Renderable
             e.onPlayerDeath();
     }
 
-    @Override
-    public final void update(GameContainer gc, float dt)
-    {
-        updateEnemies(gc, dt);
-        updateGoldCoins(gc, dt);
-        updatePlayer(gc, dt);
-
-        checkLevelState();
-    }
-
     /**
-     * Checks the ending conditions of the level.
-     * Has the level been completed?
+     * Notifies all enemies that the player has just respawned.
      */
-    private void checkLevelState()
+    private void onPlayerRespawn()
     {
-        if (this.player.hasDied())
-        {
-            onPlayerDeath();
-        }
-        else if (this.player.shouldRevive())
-        {
-            resetLevelAfterEnemyCollision();
-        }
-        else if (playerHasWon())
-        {
-            this.levelCompleted = true;
-        }
+        for (Enemy e : this.enemies)
+            e.onPlayerRespawn();
     }
 
     /**
@@ -431,13 +444,28 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Gets a value indicating if all of the gold coins have been collected.
-     * 
-     * @return If all of the gold coins have been collected
+     * Removes all enemies flagged for removal.
      */
-    private boolean allCoinsCollected()
+    private void removeFlaggedEnemies()
     {
-        return this.coinsCollected == this.totalCoins;
+        for (int i = this.enemies.size() - 1; i >= 0; i--)
+            if (this.enemies.get(i).shouldRemove())
+                this.enemies.remove(i);
+    }
+
+    /**
+     * Removes all gold coins flagged for removal.
+     */
+    private void removeFlaggedGoldCoins()
+    {
+        for (int i = this.goldCoins.size() - 1; i >= 0; i--)
+        {
+            if (this.goldCoins.get(i).shouldRemove())
+            {
+                this.goldCoins.remove(i);
+                this.coinsCollected++;
+            }
+        }
     }
 
     @Override
@@ -461,79 +489,6 @@ public abstract class Level implements Updatable, Renderable
     {
         g.setColor(Color.cyan);
         g.draw(this.boundingPoly);
-    }
-
-    /**
-     * Renders the start and end zones.
-     * 
-     * @param g The graphics object
-     */
-    private void renderZones(Graphics g)
-    {
-        g.setColor(this.zoneColor);
-        g.fill(this.startZone);
-        g.fill(this.endZone);
-    }
-
-    /**
-     * Updates the player in the game.
-     * 
-     * @param gc The game container
-     * @param dt The delta time
-     */
-    private void updatePlayer(GameContainer gc, float dt)
-    {
-        this.playerDied = false;
-        this.player.update(gc, dt);
-    }
-
-    /**
-     * Updates the enemies in the game.
-     * 
-     * @param gc The game container
-     * @param dt The delta time
-     */
-    private void updateEnemies(GameContainer gc, float dt)
-    {
-        for (Entity e : this.enemies)
-            e.update(gc, dt);
-
-        removeFlaggedEnemies();
-    }
-
-    /**
-     * Removes all enemies flagged for removal.
-     */
-    private void removeFlaggedEnemies()
-    {
-        for (int i = this.enemies.size() - 1; i >= 0; i--)
-            if (this.enemies.get(i).shouldRemove())
-                this.enemies.remove(i);
-    }
-
-    /**
-     * Updates the gold coins in the game.
-     * 
-     * @param gc The game container
-     * @param dt The delta time
-     */
-    private void updateGoldCoins(GameContainer gc, float dt)
-    {
-        for (Entity g : this.goldCoins)
-            g.update(gc, dt);
-
-        removeFlaggedGoldCoins();
-    }
-
-    /**
-     * Renders the player.
-     * 
-     * @param g The graphics object
-     */
-    private void renderPlayer(Graphics g)
-    {
-        g.setColor(Color.white);
-        this.player.render(g);
     }
 
     /**
@@ -561,68 +516,109 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Removes all gold coins flagged for removal.
+     * Renders the player.
+     * 
+     * @param g The graphics object
      */
-    private void removeFlaggedGoldCoins()
+    private void renderPlayer(Graphics g)
     {
-        for (int i = this.goldCoins.size() - 1; i >= 0; i--)
+        g.setColor(Color.white);
+        this.player.render(g);
+    }
+
+    /**
+     * Renders the start and end zones.
+     * 
+     * @param g The graphics object
+     */
+    private void renderZones(Graphics g)
+    {
+        g.setColor(this.zoneColor);
+        g.fill(this.startZone);
+        g.fill(this.endZone);
+    }
+
+    /**
+     * Resets the level after a player has died.
+     * "Revives" the player.
+     * Resets all gold coins to original positions.
+     */
+    private final void resetLevelAfterEnemyCollision()
+    {
+        this.player.revive();
+        this.playerDied = true;
+
+        if (this.coinsCollected > 0)
         {
-            if (this.goldCoins.get(i).shouldRemove())
-            {
-                this.goldCoins.remove(i);
-                this.coinsCollected++;
-            }
+            this.coinsCollected = 0;
+            this.goldCoins.clear();
+            initGoldCoins();
         }
+
+        onPlayerRespawn();
     }
 
     /**
-     * Notifies all enemies that the player has collected a gold coin.
+     * Sets the player's starting position.
      * 
-     * @param coin The coin that was collected
+     * @param x The X coordinate
+     * @param y The Y coordinate
      */
-    private void onGoldCoinCollected(GoldCoin coin)
+    protected final void setPlayerStartPosition(float x, float y)
     {
-        for (Enemy e : this.enemies)
-            e.onCoinCollected(coin.getCenterX(), coin.getCenterY(), this.totalCoins - this.coinsCollected);
+        this.playerStartX = x;
+        this.playerStartY = y + LEVEL_OFFSET;
+
+        this.player = new Player(this);
+    }
+
+    @Override
+    public final void update(GameContainer gc, float dt)
+    {
+        updateEnemies(gc, dt);
+        updateGoldCoins(gc, dt);
+        updatePlayer(gc, dt);
+
+        checkLevelState();
     }
 
     /**
-     * Gets a value indicating if the level has been completed.
+     * Updates the enemies in the game.
      * 
-     * @return If the level has been completed
+     * @param gc The game container
+     * @param dt The delta time
      */
-    public final boolean isLevelComplete()
+    private void updateEnemies(GameContainer gc, float dt)
     {
-        return this.levelCompleted;
+        for (Entity e : this.enemies)
+            e.update(gc, dt);
+
+        removeFlaggedEnemies();
     }
 
     /**
-     * Gets a value indicating the starting X coordinate of the player.
+     * Updates the gold coins in the game.
      * 
-     * @return The starting X coordinate of the player
+     * @param gc The game container
+     * @param dt The delta time
      */
-    public final float getPlayerStartX()
+    private void updateGoldCoins(GameContainer gc, float dt)
     {
-        return this.playerStartX;
+        for (Entity g : this.goldCoins)
+            g.update(gc, dt);
+
+        removeFlaggedGoldCoins();
     }
 
     /**
-     * Gets a value indicating the starting Y coordinate of the player.
+     * Updates the player in the game.
      * 
-     * @return The starting Y coordinate of the player
+     * @param gc The game container
+     * @param dt The delta time
      */
-    public final float getPlayerStartY()
+    private void updatePlayer(GameContainer gc, float dt)
     {
-        return this.playerStartY;
-    }
-
-    /**
-     * Gets a value indicating if the player has died.
-     * 
-     * @return If the player has died
-     */
-    public final boolean hasPlayerDied()
-    {
-        return this.playerDied;
+        this.playerDied = false;
+        this.player.update(gc, dt);
     }
 }

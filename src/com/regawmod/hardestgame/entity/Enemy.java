@@ -17,10 +17,10 @@ public abstract class Enemy extends MovableEntity
     /** The radius of the enemy */
     public static final float ENEMY_RADIUS = 8;
 
-    /** If the enemy should be bounded by the level's bounds */
-    private boolean boundedByLevel;
     /** The level */
     private Level level;
+    /** If the enemy should be bounded by the level's bounds */
+    private boolean boundedByLevel;
 
     /**
      * Creates a new {@link Enemy}
@@ -50,18 +50,58 @@ public abstract class Enemy extends MovableEntity
         setBoundedByLevel(bounded);
     }
 
-    @Override
-    public final void update(GameContainer gc, float dt)
+    /**
+     * Gets a value indicating if the enemy collided with a wall this frame.
+     * 
+     * @return If the enemy collided with a wall
+     */
+    protected boolean collidesWithWall()
     {
-        update(dt);
+        return this.level.collidesWithWall(this);
     }
 
     /**
-     * Update the enemy's logic based on the amount of time that has passed.
+     * Gets a value indicating if the enemy collided with the start or end zone.
      * 
-     * @param dt The amount of time that has passed in seconds since the last update
+     * @return If the enemy collided with a zone
      */
-    protected void update(float dt)
+    protected boolean collidesWithZone()
+    {
+        return this.level.collidesWithZones(this);
+    }
+
+    /**
+     * Gets a value indicating if the enemy is bounded by the level.
+     * 
+     * @return If the enemy is bounded
+     */
+    public boolean isBoundedByLevel()
+    {
+        return this.boundedByLevel;
+    }
+
+    /**
+     * Delegate method that is run when a coin is collected by the player.
+     * 
+     * @param coinX The X coordinate of the coin
+     * @param coinY The Y coordinate of the coin
+     * @param coinsRemaining How many coins are remaining
+     */
+    public void onCoinCollected(float coinX, float coinY, int coinsRemaining)
+    {
+    }
+
+    /**
+     * Delegate method that is run when the player dies.
+     */
+    public void onPlayerDeath()
+    {
+    }
+
+    /**
+     * Delegate method that is run then the player respawns after a death.
+     */
+    public void onPlayerRespawn()
     {
     }
 
@@ -69,6 +109,19 @@ public abstract class Enemy extends MovableEntity
     public final void render(Graphics g)
     {
         renderBlueEnemy(g);
+    }
+
+    /**
+     * Renders the blue version of the enemy.
+     * 
+     * @param g The graphics object
+     */
+    private void renderBlueEnemy(Graphics g)
+    {
+        g.setColor(Color.black);
+        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        g.setColor(Color.blue);
+        g.fillOval(this.getX() + 3, this.getY() + 3, this.getWidth() - 6, this.getHeight() - 6);
     }
 
     /**
@@ -103,29 +156,6 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Renders the blue version of the enemy.
-     * 
-     * @param g The graphics object
-     */
-    private void renderBlueEnemy(Graphics g)
-    {
-        g.setColor(Color.black);
-        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        g.setColor(Color.blue);
-        g.fillOval(this.getX() + 3, this.getY() + 3, this.getWidth() - 6, this.getHeight() - 6);
-    }
-
-    /**
-     * Gets a value indicating if the enemy is bounded by the level.
-     * 
-     * @return If the enemy is bounded
-     */
-    public boolean isBoundedByLevel()
-    {
-        return this.boundedByLevel;
-    }
-
-    /**
      * Sets if the enemy is bounded by the level.
      * 
      * @param bounded If the enemy is bounded by the level
@@ -136,47 +166,17 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Gets a value indicating if the enemy collided with a wall this frame.
+     * Update the enemy's logic based on the amount of time that has passed.
      * 
-     * @return If the enemy collided with a wall
+     * @param dt The amount of time that has passed in seconds since the last update
      */
-    protected boolean collidesWithWall()
-    {
-        return this.level.collidesWithWall(this);
-    }
-
-    /**
-     * Gets a value indicating if the enemy collided with the start or end zone.
-     * 
-     * @return If the enemy collided with a zone
-     */
-    protected boolean collidesWithZone()
-    {
-        return this.level.collidesWithZones(this);
-    }
-
-    /**
-     * Delegate method that is run when a coin is collected by the player.
-     * 
-     * @param coinX The X coordinate of the coin
-     * @param coinY The Y coordinate of the coin
-     * @param coinsRemaining How many coins are remaining
-     */
-    public void onCoinCollected(float coinX, float coinY, int coinsRemaining)
+    protected void update(float dt)
     {
     }
 
-    /**
-     * Delegate method that is run when the player dies.
-     */
-    public void onPlayerDeath()
+    @Override
+    public final void update(GameContainer gc, float dt)
     {
-    }
-
-    /**
-     * Delegate method that is run then the player respawns after a death.
-     */
-    public void onPlayerRespawn()
-    {
+        update(dt);
     }
 }
