@@ -74,11 +74,4 @@ public class DanLevel extends Level
     {
         addGoldCoin(new GoldCoin(66, 476, this));
     }
-
-    @Override
-    public String getName()
-    {
-        return "Dan Level";
-    }
-
 }

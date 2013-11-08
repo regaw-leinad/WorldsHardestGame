@@ -57,9 +57,9 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Update the enemy logic here.
+     * Update the enemy's logic based on the amount of time that has passed.
      * 
-     * @param dt The delta time
+     * @param dt The amount of time that has passed in seconds since the last update
      */
     protected void update(float dt)
     {
@@ -68,28 +68,26 @@ public abstract class Enemy extends MovableEntity
     @Override
     public final void render(Graphics g)
     {
-        //drawBoundingShape(g);
-        drawBlueEnemy(g);
-        //drawGreenFaceEnemy(g);
+        renderBlueEnemy(g);
     }
 
     /**
-     * Draws the enemy's bounding shape.
+     * Renders the enemy's bounding shape.
      * 
      * @param g The graphics object
      */
-    private void drawBoundingShape(Graphics g)
+    private void renderBoundingShape(Graphics g)
     {
         g.setColor(Color.cyan);
         g.draw(this.getBody());
     }
 
     /**
-     * Draws the green version of the enemy.
+     * Renders the green version of the enemy.
      * 
      * @param g The graphics object
      */
-    private void drawGreenFaceEnemy(Graphics g)
+    private void renderGreenFaceEnemy(Graphics g)
     {
         g.setColor(Color.black);
         g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
@@ -105,11 +103,11 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Draws the blue version of the enemy.
+     * Renders the blue version of the enemy.
      * 
      * @param g The graphics object
      */
-    private void drawBlueEnemy(Graphics g)
+    private void renderBlueEnemy(Graphics g)
     {
         g.setColor(Color.black);
         g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());

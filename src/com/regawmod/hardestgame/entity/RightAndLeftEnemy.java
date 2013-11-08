@@ -2,8 +2,21 @@ package com.regawmod.hardestgame.entity;
 
 import com.regawmod.hardestgame.level.Level;
 
+/**
+ * An enemy, bounded by the walls of the level, that moves right to left.
+ * 
+ * @author Dan Wager
+ */
 public class RightAndLeftEnemy extends Enemy
 {
+    /**
+     * Creates a new {@link RightAndLeftEnemy}.
+     * 
+     * @param x The X position
+     * @param y The Y position
+     * @param speed The speed of the enemy
+     * @param level The level
+     */
     public RightAndLeftEnemy(float x, float y, float speed, Level level)
     {
         super(x, y, level, true);

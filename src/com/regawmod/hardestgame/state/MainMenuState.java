@@ -7,11 +7,21 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import com.regawmod.hardestgame.GameMain;
 
+/**
+ * The main menu state.
+ * 
+ * @author Dan Wager
+ */
 public class MainMenuState extends AbstractGameState
 {
-    //private TrueTypeFont gameFont;
+    /** The main game instance */
     private GameMain gameMain;
 
+    /**
+     * Creates a new {@link MainMenuState}.
+     * 
+     * @param game The main game instance
+     */
     public MainMenuState(GameMain game)
     {
         this.gameMain = game;
@@ -33,7 +43,6 @@ public class MainMenuState extends AbstractGameState
     public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException
     {
         g.setColor(Color.white);
-        //gameFont.drawString(400, 300, "Testing");
         g.drawString("Deaths: " + gameMain.getAmountOfDeaths(), 400, 300);
     }
 
@@ -42,5 +51,4 @@ public class MainMenuState extends AbstractGameState
     {
         return GameState.MAIN_MENU;
     }
-
 }

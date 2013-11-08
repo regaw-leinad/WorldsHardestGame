@@ -11,13 +11,26 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import com.regawmod.hardestgame.GameMain;
 import com.regawmod.hardestgame.level.Level;
 
+/**
+ * The state we're in while playing a level.
+ * 
+ * @author Dan Wager
+ */
 public class InGameState extends AbstractGameState
 {
+    /** The current level we're playing */
     private Level level;
+    /** The main game instance */
     private GameMain gameMain;
 
+    /** If we should create a new level on return */
     private boolean createNextLevel;
 
+    /**
+     * Creates a new {@link InGameState}.
+     * 
+     * @param gameMain The main game instance
+     */
     public InGameState(GameMain gameMain)
     {
         this.gameMain = gameMain;
@@ -52,13 +65,23 @@ public class InGameState extends AbstractGameState
     @Override
     public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException
     {
+        renderStats(gc, g);
+        level.render(g);
+    }
+
+    /**
+     * Renders the statistics for the current game.
+     * 
+     * @param gc The game container
+     * @param g The graphics object
+     */
+    private void renderStats(GameContainer gc, Graphics g)
+    {
         g.setColor(Color.black);
         g.fillRect(0, 0, gc.getWidth(), 60);
 
         g.setColor(Color.white);
         g.drawString("Deaths: " + this.gameMain.getAmountOfDeaths(), 280, 10);
-
-        level.render(g);
     }
 
     @Override

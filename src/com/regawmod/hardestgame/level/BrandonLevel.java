@@ -3,7 +3,6 @@ package com.regawmod.hardestgame.level;
 import com.regawmod.hardestgame.entity.AwareEnemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.entity.UpAndDownEnemy;
-import com.regawmod.hardestgame.level.Level;
 
 public class BrandonLevel extends Level
 {
@@ -65,11 +64,5 @@ public class BrandonLevel extends Level
             addGoldCoin(new GoldCoin(450, 220 + 12 * i, this));
 
         addGoldCoin(new GoldCoin(240, 240, this));
-    }
-
-    @Override
-    public String getName()
-    {
-        return "Brandon's Level";
     }
 }

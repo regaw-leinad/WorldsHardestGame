@@ -10,10 +10,21 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import com.regawmod.hardestgame.GameMain;
 
+/**
+ * The state we're in after completing a level.
+ * 
+ * @author Dan Wager
+ */
 public class LevelCompleteGameState extends AbstractGameState
 {
+    /** The main game instance */
     private GameMain gameMain;
 
+    /**
+     * Creates a new {@link LevelCompleteGameState}.
+     * 
+     * @param gameMain The main game instance
+     */
     public LevelCompleteGameState(GameMain gameMain)
     {
         this.gameMain = gameMain;
