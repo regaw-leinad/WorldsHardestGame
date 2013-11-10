@@ -1,5 +1,6 @@
-package com.regawmod.hardestgame.entity;
+package com.regawmod.hardestgame.user.enemy;
 
+import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.level.Level;
 
 /**
@@ -43,7 +44,7 @@ public class CoinWatcherEnemy extends Enemy
     {
         if (!inPosition)
         {
-            setSpeed(300f);
+            setSpeed(100);
 
             if (this.totalDistance <= 0)
             {

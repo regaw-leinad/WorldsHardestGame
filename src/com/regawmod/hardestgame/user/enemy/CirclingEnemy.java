@@ -1,7 +1,8 @@
-package com.regawmod.hardestgame.entity;
+package com.regawmod.hardestgame.user.enemy;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.level.Level;
 
 /**
@@ -35,7 +36,7 @@ public class CirclingEnemy extends Enemy
         super(cX + (float)Math.cos(initAngle) * radius, cY + (float)Math.sin(initAngle) * radius, level);
 
         this.revolveAroundX = cX;
-        this.revolveAroundY = cY;
+        this.revolveAroundY = cY + Level.LEVEL_OFFSET;
         this.radius = radius;
         this.angle = initAngle;
 
@@ -74,7 +75,7 @@ public class CirclingEnemy extends Enemy
 
         for (int i = 0; i < numOfLayers; i++)
             for (int j = 0; j < enemPerLayer; j++)
-                result.add(new CirclingEnemy(centerX, centerY + Level.LEVEL_OFFSET, (j * Math.PI / (enemPerLayer / 2)) - bladeAngle * i, initRadius + indivRadius * i, speed, level));
+                result.add(new CirclingEnemy(centerX, centerY, (j * Math.PI / (enemPerLayer / 2)) - bladeAngle * i, initRadius + indivRadius * i, speed, level));
 
         return result;
     }

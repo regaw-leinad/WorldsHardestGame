@@ -38,6 +38,8 @@ public abstract class Level implements Updatable, Renderable
     private Image levelImage;
     /** Our level's bounding polygon */
     private Polygon boundingPoly;
+    /** Extra bounding polygons inside of the level */
+    private List<Polygon> insideLevelPolygons;
     /** The bounding poly for the start zone */
     private Polygon startZone;
     /** The bounding poly for the end zone */
@@ -50,10 +52,10 @@ public abstract class Level implements Updatable, Renderable
 
     /** The collection of enemies in the level */
     private List<Enemy> enemies;
-    /** The colection of gold coins in the level */
+    /** The collection of gold coins in the level */
     private List<GoldCoin> goldCoins;
 
-    /** The number of gold coings collected by the player */
+    /** The number of gold coins collected by the player */
     private int coinsCollected;
     /** The total number of coins in the level */
     private int totalCoins;
@@ -67,6 +69,7 @@ public abstract class Level implements Updatable, Renderable
         this.goldCoins = new ArrayList<GoldCoin>();
 
         this.boundingPoly = new Polygon();
+        this.insideLevelPolygons = new ArrayList<Polygon>();
         this.startZone = new Polygon();
         this.endZone = new Polygon();
 
@@ -82,6 +85,7 @@ public abstract class Level implements Updatable, Renderable
         loadLevelImage();
 
         initBoundingPolygon();
+        initInsidePolygons();
         initStartZonePolygon();
         initEndZonePolygon();
         initPlayerStartPosition();
@@ -176,6 +180,22 @@ public abstract class Level implements Updatable, Renderable
     protected final void addStartZonePolygonPoint(float x, float y)
     {
         this.startZone.addPoint(x, y + LEVEL_OFFSET);
+    }
+
+    /**
+     * Adds a bounding polygon inside of the level.
+     * 
+     * @param points An array of points in the order [x1, y1, x2, y2...]
+     */
+    protected final void addInsideLevelPolygonPoints(float[] points)
+    {
+        if (points.length < 8)
+            throw new IllegalArgumentException("Inside bounding polygon is not set up correctly!");
+
+        for (int i = 1; i < points.length; i += 2)
+            points[i] += LEVEL_OFFSET;
+
+        this.insideLevelPolygons.add(new Polygon(points));
     }
 
     /**
@@ -274,9 +294,12 @@ public abstract class Level implements Updatable, Renderable
      */
     public final boolean collidesWithWall(Entity entity)
     {
+        for (Polygon p : this.insideLevelPolygons)
+            if (entity.getBody().intersects(p))
+                return true;
+
         // We need this !contains instead of intersects because large deltas 
         // might bring the entity outside of the bounding poly
-
         return !this.boundingPoly.contains(entity.getBody());
     }
 
@@ -349,6 +372,16 @@ public abstract class Level implements Updatable, Renderable
     protected abstract void initBoundingPolygon();
 
     /**
+     * Initialize all of the bounding
+     */
+    protected abstract void initInsidePolygons();
+
+    /**
+     * Initialize the player's start position here.
+     */
+    protected abstract void initPlayerStartPosition();
+
+    /**
      * Initialize the bounding polygon for the end zone here.
      * Must initialize in clockwise order.
      */
@@ -363,11 +396,6 @@ public abstract class Level implements Updatable, Renderable
      * Initialize and add the gold coins for the level here.
      */
     protected abstract void initGoldCoins();
-
-    /**
-     * Initialize the player's start position here.
-     */
-    protected abstract void initPlayerStartPosition();
 
     /**
      * Initialize the bounding polygon for the start zone here.
@@ -501,6 +529,7 @@ public abstract class Level implements Updatable, Renderable
         g.setColor(Color.white);
         for (Entity e : this.enemies)
             e.render(g);
+
     }
 
     /**

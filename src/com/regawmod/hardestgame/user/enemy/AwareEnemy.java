@@ -1,5 +1,6 @@
-package com.regawmod.hardestgame.entity;
+package com.regawmod.hardestgame.user.enemy;
 
+import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.level.Level;
 
 /**

@@ -1,23 +1,24 @@
-package com.regawmod.hardestgame.entity;
+package com.regawmod.hardestgame.user.enemy;
 
+import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.level.Level;
 
 /**
- * An enemy, bounded by the walls of the level, that moves up and down.
+ * An enemy, bounded by the walls of the level, that moves right to left.
  * 
  * @author Dan Wager
  */
-public class UpAndDownEnemy extends Enemy
+public class RightAndLeftEnemy extends Enemy
 {
     /**
-     * Creates a new {@link UpAndDownEnemy}.
+     * Creates a new {@link RightAndLeftEnemy}.
      * 
      * @param x The X position
      * @param y The Y position
      * @param speed The speed of the enemy
      * @param level The level
      */
-    public UpAndDownEnemy(float x, float y, float speed, Level level)
+    public RightAndLeftEnemy(float x, float y, float speed, Level level)
     {
         super(x, y, level, true);
 
@@ -27,12 +28,12 @@ public class UpAndDownEnemy extends Enemy
     @Override
     public void update(float dt)
     {
-        this.moveY(getSpeed() * dt);
+        this.moveX(getSpeed() * dt);
 
         if (this.collidesWithWall() || this.collidesWithZone())
         {
             while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveY(this.getBactrackComponent(dt));
+                this.moveX(this.getBactrackComponent(dt));
 
             this.turnAround();
         }
