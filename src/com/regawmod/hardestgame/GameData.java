@@ -3,7 +3,7 @@ package com.regawmod.hardestgame;
 import java.util.ArrayList;
 import java.util.List;
 import com.regawmod.hardestgame.level.Level;
-import com.regawmod.hardestgame.user.level.BrandonLevel;
+import com.regawmod.hardestgame.user.level.DanLevel2;
 
 /**
  * Holds data about the game.
@@ -40,7 +40,8 @@ public class GameData
         this.levels = new ArrayList<Class<? extends Level>>();
 
         //        this.levels.add(DanLevel.class);
-        this.levels.add(BrandonLevel.class);
+        //this.levels.add(BrandonLevel.class);
+        this.levels.add(DanLevel2.class);
     }
 
     /**

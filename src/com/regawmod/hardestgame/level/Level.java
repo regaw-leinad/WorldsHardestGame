@@ -99,25 +99,67 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Adds a point to the level's bounding polygon.
+     * Creates the level's bounding polygon from an array of floats.
      * 
-     * @param x The X coordinate
-     * @param y The Y coordinate
+     * @param points An array of points in the order [x1, y1, x2, y2...]
      */
-    protected final void addBoundingPolygonPoint(float x, float y)
+    protected final void setBoundingPolygonPoints(float[] points)
     {
-        this.boundingPoly.addPoint(x, y + LEVEL_OFFSET);
+        if (points.length < 8)
+            throw new IllegalArgumentException("Bounding polygon is not set up correctly!");
+
+        for (int i = 1; i < points.length; i += 2)
+            points[i] += LEVEL_OFFSET;
+
+        this.boundingPoly = new Polygon(points);
     }
 
     /**
-     * Adds a point to the end zone's bounding polygon.
+     * Creates the level's start zone bounding polygon from an array of floats.
      * 
-     * @param x The X coordinate
-     * @param y The Y coordinate
+     * @param points An array of points in the order [x1, y1, x2, y2...]
      */
-    protected final void addEndZonePolygonPoint(float x, float y)
+    protected final void setStartZonePolygonPoints(float[] points)
     {
-        this.endZone.addPoint(x, y + LEVEL_OFFSET);
+        if (points.length < 8)
+            throw new IllegalArgumentException("Start zone's bounding polygon is not set up correctly!");
+
+        for (int i = 1; i < points.length; i += 2)
+            points[i] += LEVEL_OFFSET;
+
+        this.startZone = new Polygon(points);
+    }
+
+    /**
+     * Creates the level's end zone bounding polygon from an array of floats.
+     * 
+     * @param points An array of points in the order [x1, y1, x2, y2...]
+     */
+    protected final void setEndZonePolygonPoints(float[] points)
+    {
+        if (points.length < 8)
+            throw new IllegalArgumentException("End zone's bounding polygon is not set up correctly!");
+
+        for (int i = 1; i < points.length; i += 2)
+            points[i] += LEVEL_OFFSET;
+
+        this.endZone = new Polygon(points);
+    }
+
+    /**
+     * Adds a bounding polygon inside of the level.
+     * 
+     * @param points An array of points in the order [x1, y1, x2, y2...]
+     */
+    protected final void addInsideLevelPolygonFromPoints(float[] points)
+    {
+        if (points.length < 8)
+            throw new IllegalArgumentException("Inside bounding polygon is not set up correctly!");
+
+        for (int i = 1; i < points.length; i += 2)
+            points[i] += LEVEL_OFFSET;
+
+        this.insideLevelPolygons.add(new Polygon(points));
     }
 
     /**
@@ -172,33 +214,6 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Adds a point to the start zone's bounding polygon.
-     * 
-     * @param x The X coordinate
-     * @param y The Y coordinate
-     */
-    protected final void addStartZonePolygonPoint(float x, float y)
-    {
-        this.startZone.addPoint(x, y + LEVEL_OFFSET);
-    }
-
-    /**
-     * Adds a bounding polygon inside of the level.
-     * 
-     * @param points An array of points in the order [x1, y1, x2, y2...]
-     */
-    protected final void addInsideLevelPolygonPoints(float[] points)
-    {
-        if (points.length < 8)
-            throw new IllegalArgumentException("Inside bounding polygon is not set up correctly!");
-
-        for (int i = 1; i < points.length; i += 2)
-            points[i] += LEVEL_OFFSET;
-
-        this.insideLevelPolygons.add(new Polygon(points));
-    }
-
-    /**
      * Gets a value indicating if all of the gold coins have been collected.
      * 
      * @return If all of the gold coins have been collected
@@ -244,7 +259,7 @@ public abstract class Level implements Updatable, Renderable
             throw new IllegalStateException("End zone is not set up correctly!");
 
         if (!this.startZone.contains(this.player.getBody()))
-            throw new IllegalStateException("Player must start in the Start zone.");
+            throw new IllegalStateException("Player must start in the Start zone!");
     }
 
     /**
@@ -372,7 +387,7 @@ public abstract class Level implements Updatable, Renderable
     protected abstract void initBoundingPolygon();
 
     /**
-     * Initialize all of the bounding
+     * Initialize all of the bounding polygons inside of the level's bounds
      */
     protected abstract void initInsidePolygons();
 
@@ -501,22 +516,11 @@ public abstract class Level implements Updatable, Renderable
     {
         this.levelImage.draw(0, LEVEL_OFFSET);
 
-        renderZones(g);
+        //renderZones(g);
 
         renderEnemies(g);
         renderPlayer(g);
         renderGoldCoins(g);
-    }
-
-    /**
-     * Renders the bounding polygon for the level.
-     * 
-     * @param g The graphics object
-     */
-    private void renderBoundingPoly(Graphics g)
-    {
-        g.setColor(Color.cyan);
-        g.draw(this.boundingPoly);
     }
 
     /**

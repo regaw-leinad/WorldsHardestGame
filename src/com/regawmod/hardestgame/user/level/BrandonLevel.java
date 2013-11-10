@@ -14,32 +14,17 @@ public class BrandonLevel extends Level
     @Override
     protected void initBoundingPolygon()
     {
-        addBoundingPolygonPoint(119, 30);
-        addBoundingPolygonPoint(360, 30);
-        addBoundingPolygonPoint(360, 209);
-        addBoundingPolygonPoint(629, 209);
-        addBoundingPolygonPoint(629, 89);
-        addBoundingPolygonPoint(750, 89);
-        addBoundingPolygonPoint(750, 450);
-        addBoundingPolygonPoint(119, 450);
+        //        
     }
 
     @Override
     protected void initStartZonePolygon()
     {
-        addStartZonePolygonPoint(120, 31);
-        addStartZonePolygonPoint(360, 31);
-        addStartZonePolygonPoint(360, 90);
-        addStartZonePolygonPoint(120, 90);
     }
 
     @Override
     protected void initEndZonePolygon()
     {
-        addEndZonePolygonPoint(630, 90);
-        addEndZonePolygonPoint(750, 90);
-        addEndZonePolygonPoint(750, 150);
-        addEndZonePolygonPoint(630, 150);
     }
 
     @Override
