@@ -2,59 +2,61 @@ package com.regawmod.hardestgame.user.level;
 
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.level.Level;
-import com.regawmod.hardestgame.user.enemy.BasicEnemy;
-import com.regawmod.hardestgame.user.enemy.CirclingEnemy;
 import com.regawmod.hardestgame.user.enemy.RightAndLeftEnemy;
-import com.regawmod.hardestgame.user.enemy.UpAndDownEnemy;
 
 public class DanLevel extends Level
 {
-
-    public DanLevel()
-    {
-    }
-
     @Override
     public void initBoundingPolygon()
     {
-        //        
+        float[] points = { 38f, 10f, 749f, 10f, 749f, 102f, 567f, 102f,
+                567f, 451f, 192f, 451f, 192f, 300f, 38f, 300f };
+        setBoundingPolygonPoints(points);
     }
 
     @Override
-    protected void initStartZonePolygon()
+    public void initStartZonePolygon()
     {
+        float[] points = { 39f, 11f, 114f, 11f, 114f, 86f, 39f, 86f };
+        setStartZonePolygonPoints(points);
     }
 
     @Override
-    protected void initEndZonePolygon()
+    public void initEndZonePolygon()
     {
+        float[] points = { 491f, 375f, 566f, 375f, 566f, 450f, 491f, 450f };
+        setEndZonePolygonPoints(points);
     }
 
     @Override
-    protected void initPlayerStartPosition()
+    public void initInsidePolygons()
     {
-        setPlayerStartPosition(85, 125);
+        float[] inside1 = { 156f, 111f, 312f, 111f, 312f, 196f, 156f, 196f };
+        addInsideLevelPolygonFromPoints(inside1);
+
+        float[] inside2 = { 391f, 156f, 491f, 156f, 491f, 344f, 391f, 344f };
+        addInsideLevelPolygonFromPoints(inside2);
+
+        float[] inside3 = { 212f, 301f, 335f, 301f, 335f, 434f, 212f, 434f };
+        addInsideLevelPolygonFromPoints(inside3);
+    }
+
+    // Suggested Player Start Position Code:
+    @Override
+    public void initPlayerStartPosition()
+    {
+        setPlayerStartPosition(76.5f, 48.5f);
     }
 
     @Override
     protected void initEnemies()
     {
-        addEnemy(new BasicEnemy(400, 300, this));
-        addEnemy(new UpAndDownEnemy(400, 300, 100f, this));
-        addEnemy(new RightAndLeftEnemy(400, 300, 100f, this));
-        //addEnemy(new CirclingEnemy(400, 300, 0, 50, Math.PI / 2, this));
-        addEnemies(CirclingEnemy.getCircleGroupEnemy(this, 400, 300, 4, 4, 30, 16, Math.PI / 2, Math.PI / 12));
-
+        addEnemy(new RightAndLeftEnemy(300, 250, 100f, this));
     }
 
     @Override
     protected void initGoldCoins()
     {
-        addGoldCoin(new GoldCoin(66, 476, this));
-    }
-
-    @Override
-    protected void initInsidePolygons()
-    {
+        addGoldCoin(new GoldCoin(500, 300, this));
     }
 }

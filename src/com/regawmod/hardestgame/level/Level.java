@@ -434,7 +434,6 @@ public abstract class Level implements Updatable, Renderable
     private void loadLevelImage()
     {
         this.levelImage = Resources.getLevelImage(this.getClass().getSimpleName());
-        //new Image(LevelLoader.LEVEL_RES_DIRECTORY + File.separator + this.getClass().getSimpleName() + ".png");
     }
 
     /**
@@ -516,8 +515,6 @@ public abstract class Level implements Updatable, Renderable
     {
         this.levelImage.draw(0, LEVEL_OFFSET);
 
-        //renderZones(g);
-
         renderEnemies(g);
         renderPlayer(g);
         renderGoldCoins(g);
@@ -557,18 +554,6 @@ public abstract class Level implements Updatable, Renderable
     {
         g.setColor(Color.white);
         this.player.render(g);
-    }
-
-    /**
-     * Renders the start and end zones.
-     * 
-     * @param g The graphics object
-     */
-    private void renderZones(Graphics g)
-    {
-        g.setColor(this.zoneColor);
-        g.fill(this.startZone);
-        g.fill(this.endZone);
     }
 
     /**

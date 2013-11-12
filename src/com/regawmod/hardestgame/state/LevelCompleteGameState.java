@@ -8,6 +8,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import com.regawmod.hardestgame.GameData;
 import com.regawmod.hardestgame.GameMain;
 
 /**
@@ -50,18 +51,23 @@ public class LevelCompleteGameState extends AbstractGameState
     public void update(GameContainer gc, StateBasedGame game, float dt) throws SlickException
     {
         if (gc.getInput().isKeyPressed(Input.KEY_SPACE))
-            game.enterState(GameState.IN_GAME, new FadeOutTransition(), new FadeInTransition());
+            game.enterState(GameState.MAIN_MENU, new FadeOutTransition(), new FadeInTransition());
     }
 
     @Override
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
-        this.gameMain.incrementLevel();
+        getGameData().incrementLevel();
     }
 
     @Override
     public int getID()
     {
         return GameState.LEVEL_COMPLETE;
+    }
+
+    private GameData getGameData()
+    {
+        return this.gameMain.getGameData();
     }
 }

@@ -125,17 +125,6 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Renders the enemy's bounding shape.
-     * 
-     * @param g The graphics object
-     */
-    private void renderBoundingShape(Graphics g)
-    {
-        g.setColor(Color.cyan);
-        g.draw(this.getBody());
-    }
-
-    /**
      * Renders the green version of the enemy.
      * 
      * @param g The graphics object

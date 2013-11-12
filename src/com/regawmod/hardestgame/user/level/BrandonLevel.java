@@ -2,60 +2,61 @@ package com.regawmod.hardestgame.user.level;
 
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.level.Level;
-import com.regawmod.hardestgame.user.enemy.WaveEnemy;
+import com.regawmod.hardestgame.user.enemy.RightAndLeftEnemy;
 
 public class BrandonLevel extends Level
 {
-    public BrandonLevel()
+    @Override
+    public void initBoundingPolygon()
     {
-        super();
+        float[] points = { 38f, 10f, 749f, 10f, 749f, 102f, 567f, 102f,
+                567f, 451f, 192f, 451f, 192f, 300f, 38f, 300f };
+        setBoundingPolygonPoints(points);
     }
 
     @Override
-    protected void initBoundingPolygon()
+    public void initStartZonePolygon()
     {
-        //        
+        float[] points = { 39f, 11f, 114f, 11f, 114f, 86f, 39f, 86f };
+        setStartZonePolygonPoints(points);
     }
 
     @Override
-    protected void initStartZonePolygon()
+    public void initEndZonePolygon()
     {
+        float[] points = { 491f, 375f, 566f, 375f, 566f, 450f, 491f, 450f };
+        setEndZonePolygonPoints(points);
     }
 
     @Override
-    protected void initEndZonePolygon()
+    public void initInsidePolygons()
     {
+        float[] inside1 = { 156f, 111f, 312f, 111f, 312f, 196f, 156f, 196f };
+        addInsideLevelPolygonFromPoints(inside1);
+
+        float[] inside2 = { 391f, 156f, 491f, 156f, 491f, 344f, 391f, 344f };
+        addInsideLevelPolygonFromPoints(inside2);
+
+        float[] inside3 = { 212f, 301f, 335f, 301f, 335f, 434f, 212f, 434f };
+        addInsideLevelPolygonFromPoints(inside3);
     }
 
+    // Suggested Player Start Position Code:
     @Override
-    protected void initPlayerStartPosition()
+    public void initPlayerStartPosition()
     {
-        setPlayerStartPosition(240, 75);
+        setPlayerStartPosition(76.5f, 48.5f);
     }
 
     @Override
     protected void initEnemies()
     {
-        //addEnemies(CirclingEnemy.getCircleGroupEnemy(this, 240f, 240, 4, 4, 50f, 70f, -Math.PI / 2));
-        //addEnemy(new AwareEnemy(400, 300, this));
-        //        addEnemy(new UpAndDownEnemy(480, 250, 200, this));
-        //        addEnemy(new UpAndDownEnemy(420, 415, -200, this));
-        //addEnemy(new CoinWatcherEnemy(480, 250, this));
-        addEnemies(WaveEnemy.getWaveEnemyGroup(360, 629, 329, 50, this));
-        //        addEnemy(new WaveEnemy(200f, 400f, 60f, 100f, this));
+        addEnemy(new RightAndLeftEnemy(300, 250, 100f, this));
     }
 
     @Override
     protected void initGoldCoins()
     {
-        //        for (int i = 0; i < 18; i++)
-        //            addGoldCoin(new GoldCoin(450, 220 + 12 * i, this));
-
-        addGoldCoin(new GoldCoin(240, 240, this));
-    }
-
-    @Override
-    protected void initInsidePolygons()
-    {
+        addGoldCoin(new GoldCoin(500, 300, this));
     }
 }

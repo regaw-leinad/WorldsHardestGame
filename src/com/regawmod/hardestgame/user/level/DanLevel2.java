@@ -2,7 +2,7 @@ package com.regawmod.hardestgame.user.level;
 
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.level.Level;
-import com.regawmod.hardestgame.user.enemy.BasicEnemy;
+import com.regawmod.hardestgame.user.enemy.RightAndLeftEnemy;
 
 public class DanLevel2 extends Level
 {
@@ -51,7 +51,7 @@ public class DanLevel2 extends Level
     @Override
     protected void initEnemies()
     {
-        addEnemy(new BasicEnemy(400, 300, this));
+        addEnemy(new RightAndLeftEnemy(300, 250, 100f, this));
     }
 
     @Override

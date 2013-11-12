@@ -28,6 +28,11 @@ public class Resources
      */
     public static Image getLevelImage(String name)
     {
+        return getImage(name);
+    }
+
+    public static Image getImage(String name)
+    {
         Image result = images.get(name);
 
         if (result == null)

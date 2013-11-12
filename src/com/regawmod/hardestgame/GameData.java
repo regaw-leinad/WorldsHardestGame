@@ -3,6 +3,8 @@ package com.regawmod.hardestgame;
 import java.util.ArrayList;
 import java.util.List;
 import com.regawmod.hardestgame.level.Level;
+import com.regawmod.hardestgame.user.level.BrandonLevel;
+import com.regawmod.hardestgame.user.level.DanLevel;
 import com.regawmod.hardestgame.user.level.DanLevel2;
 
 /**
@@ -39,9 +41,14 @@ public class GameData
     {
         this.levels = new ArrayList<Class<? extends Level>>();
 
-        //        this.levels.add(DanLevel.class);
-        //this.levels.add(BrandonLevel.class);
+        this.levels.add(DanLevel.class);
+        this.levels.add(BrandonLevel.class);
         this.levels.add(DanLevel2.class);
+    }
+
+    public List<Class<? extends Level>> getLevels()
+    {
+        return this.levels;
     }
 
     /**
@@ -49,7 +56,7 @@ public class GameData
      * 
      * @return A new current level instance, or null
      */
-    public Level getNewLevel()
+    public Level getLevelInstance()
     {
         try
         {
@@ -71,21 +78,19 @@ public class GameData
     }
 
     /**
-     * Sets the current level.
-     * 
-     * @param level The level to set as current (0-based)
-     */
-    public void setCurrentLevel(int level)
-    {
-        this.currentLevelindex = level;
-    }
-
-    /**
      * Increments the current level by one.
      */
     public void incrementLevel()
     {
-        this.currentLevelindex++;
+        this.currentLevelindex = getValidIndex(this.currentLevelindex + 1);
+    }
+
+    /**
+     * Decrements the current level by one.
+     */
+    public void decrementLevel()
+    {
+        this.currentLevelindex = getValidIndex(this.currentLevelindex - 1);
     }
 
     /**
@@ -106,5 +111,19 @@ public class GameData
     public int getAmountOfDeaths()
     {
         return this.amountOfDeaths;
+    }
+
+    /**
+     * Returns a valid index within range
+     * 
+     * @param index The index to validate
+     * @return The valid index
+     */
+    private int getValidIndex(int index)
+    {
+        if (index < 0)
+            return this.levels.size() - 1;
+
+        return index % this.levels.size();
     }
 }

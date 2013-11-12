@@ -8,6 +8,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import com.regawmod.hardestgame.GameData;
 import com.regawmod.hardestgame.GameMain;
 import com.regawmod.hardestgame.level.Level;
 
@@ -39,8 +40,8 @@ public class InGameState extends AbstractGameState
     @Override
     public void init(GameContainer gc, StateBasedGame game) throws SlickException
     {
-        this.level = this.gameMain.getNewCurrentLevel();
-        this.createNextLevel = false;
+        //this.level = getGameData().getLevelInstance();
+        this.createNextLevel = true;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class InGameState extends AbstractGameState
 
         if (this.level.hasPlayerDied())
         {
-            this.gameMain.incrementDeaths();
+            getGameData().incrementDeaths();
         }
         else if (this.level.isLevelComplete())
         {
@@ -81,21 +82,27 @@ public class InGameState extends AbstractGameState
         g.fillRect(0, 0, gc.getWidth(), 60);
 
         g.setColor(Color.white);
-        g.drawString("Deaths: " + this.gameMain.getAmountOfDeaths(), 280, 10);
+        g.drawString("Deaths: " + getGameData().getAmountOfDeaths(), 280, 10);
     }
 
     @Override
     public void enter(GameContainer gc, StateBasedGame game) throws SlickException
     {
         if (this.createNextLevel)
-            this.level = this.gameMain.getNewCurrentLevel();
-
-        super.leave(gc, game);
+        {
+            this.level = getGameData().getLevelInstance();
+            this.createNextLevel = false;
+        }
     }
 
     @Override
     public int getID()
     {
         return GameState.IN_GAME;
+    }
+
+    private GameData getGameData()
+    {
+        return this.gameMain.getGameData();
     }
 }
