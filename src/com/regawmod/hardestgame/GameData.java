@@ -1,11 +1,7 @@
 package com.regawmod.hardestgame;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.regawmod.hardestgame.level.Level;
-import com.regawmod.hardestgame.user.level.BrandonLevel;
-import com.regawmod.hardestgame.user.level.DanLevel;
-import com.regawmod.hardestgame.user.level.DanLevel2;
 
 /**
  * Holds data about the game.
@@ -14,11 +10,13 @@ import com.regawmod.hardestgame.user.level.DanLevel2;
  */
 public class GameData
 {
+    /** The level loader */
+    private LevelLoader levelLoader;
     /** The list of all level classes in the game */
     private List<Class<? extends Level>> levels;
 
     /** Our current level index */
-    private int currentLevelindex;
+    private int currentLevelIndex;
     /** The amount of player deaths */
     private int amountOfDeaths;
 
@@ -29,7 +27,7 @@ public class GameData
     {
         initLevels();
 
-        this.currentLevelindex = 0;
+        this.currentLevelIndex = 0;
         this.amountOfDeaths = 0;
     }
 
@@ -39,16 +37,29 @@ public class GameData
      */
     private void initLevels()
     {
-        this.levels = new ArrayList<Class<? extends Level>>();
+        this.levelLoader = new LevelLoader();
 
-        this.levels.add(DanLevel.class);
-        this.levels.add(BrandonLevel.class);
-        this.levels.add(DanLevel2.class);
+        this.levels = this.levelLoader.getLevelCollection();
     }
 
+    /**
+     * Gets a list of all loaded level classes
+     * 
+     * @return A list of all loaded level classes
+     */
     public List<Class<? extends Level>> getLevels()
     {
         return this.levels;
+    }
+
+    /**
+     * Gets a value indicating how many levels are loaded
+     * 
+     * @return The number of levels that are loaded
+     */
+    public int getLevelCount()
+    {
+        return this.levels.size();
     }
 
     /**
@@ -60,7 +71,7 @@ public class GameData
     {
         try
         {
-            return this.levels.get(this.currentLevelindex).newInstance();
+            return this.levels.get(this.currentLevelIndex).newInstance();
         }
         catch (InstantiationException | IllegalAccessException e)
         {
@@ -82,7 +93,7 @@ public class GameData
      */
     public void incrementLevel()
     {
-        this.currentLevelindex = getValidIndex(this.currentLevelindex + 1);
+        this.currentLevelIndex = getValidIndex(this.currentLevelIndex + 1);
     }
 
     /**
@@ -90,7 +101,7 @@ public class GameData
      */
     public void decrementLevel()
     {
-        this.currentLevelindex = getValidIndex(this.currentLevelindex - 1);
+        this.currentLevelIndex = getValidIndex(this.currentLevelIndex - 1);
     }
 
     /**
@@ -100,7 +111,7 @@ public class GameData
      */
     public int getCurrentLevel()
     {
-        return this.currentLevelindex;
+        return this.currentLevelIndex;
     }
 
     /**
@@ -124,6 +135,9 @@ public class GameData
         if (index < 0)
             return this.levels.size() - 1;
 
-        return index % this.levels.size();
+        if (this.levels.size() > 0)
+            return index % this.levels.size();
+        else
+            return 0;
     }
 }

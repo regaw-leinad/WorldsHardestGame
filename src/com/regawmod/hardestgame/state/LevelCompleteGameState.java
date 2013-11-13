@@ -44,7 +44,7 @@ public class LevelCompleteGameState extends AbstractGameState
         g.setColor(Color.white);
 
         g.drawString("You won that level!", 300, 250);
-        g.drawString("Press SPACE to play the next level!", 230, 270);
+        g.drawString("Press SPACE to return to the main menu!", 230, 270);
     }
 
     @Override
@@ -66,6 +66,11 @@ public class LevelCompleteGameState extends AbstractGameState
         return GameState.LEVEL_COMPLETE;
     }
 
+    /**
+     * Gets the game data
+     * 
+     * @return The game data
+     */
     private GameData getGameData()
     {
         return this.gameMain.getGameData();

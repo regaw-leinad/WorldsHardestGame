@@ -6,11 +6,11 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 /**
- * Handles loading/getting resources
+ * Handles loading/getting resources.
  * 
  * @author Dan Wager
  */
-public class Resources
+public class ResourceManager
 {
     /** The collection of images */
     private static Map<String, Image> images;
@@ -31,6 +31,12 @@ public class Resources
         return getImage(name);
     }
 
+    /**
+     * Gets an image with the specified name.
+     * 
+     * @param name The name of the image
+     * @return The image with the specified name
+     */
     public static Image getImage(String name)
     {
         Image result = images.get(name);
@@ -49,11 +55,23 @@ public class Resources
      */
     private static Image loadImage(String name)
     {
+        return loadImage("res/" + name + ".png", name);
+    }
+
+    /**
+     * Loads an image from the specified path, and saves it with the specified name.
+     * 
+     * @param path The path to the image
+     * @param name The image name to save as
+     * @return The loaded image
+     */
+    public static Image loadImage(String path, String name)
+    {
         Image load = null;
 
         try
         {
-            load = new Image("res/" + name + ".png");
+            load = new Image(path);
         }
         catch (SlickException e)
         {

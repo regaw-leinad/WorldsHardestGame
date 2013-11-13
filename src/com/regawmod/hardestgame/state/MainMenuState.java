@@ -12,7 +12,7 @@ import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.StateBasedGame;
 import com.regawmod.hardestgame.GameData;
 import com.regawmod.hardestgame.GameMain;
-import com.regawmod.hardestgame.Resources;
+import com.regawmod.hardestgame.ResourceManager;
 import com.regawmod.slick.ui.Button;
 
 /**
@@ -31,6 +31,7 @@ public class MainMenuState extends AbstractGameState
     private Button btnLeft;
     private Button btnRight;
     private Image levelThumbnail;
+    private boolean hasLoadedLevels;
 
     /**
      * Creates a new {@link MainMenuState}.
@@ -45,10 +46,9 @@ public class MainMenuState extends AbstractGameState
     @Override
     public void init(GameContainer gc, final StateBasedGame game) throws SlickException
     {
-        for (int i = 0; i < getGameData().getLevels().size(); i++)
-            Resources.getLevelImage(getGameData().getLevels().get(i).getSimpleName());
+        this.hasLoadedLevels = getGameData().getLevelCount() > 0;
 
-        this.playButton = new Button(gc, Resources.getImage("play_normal"), 260, 490);
+        this.playButton = new Button(gc, ResourceManager.getImage("play_normal"), 260, 490);
         this.playButton.setCenterX(400);
         this.playButton.setMouseDownColor(Color.yellow);
         this.playButton.setMouseOverColor(Color.green);
@@ -57,11 +57,12 @@ public class MainMenuState extends AbstractGameState
             @Override
             public void componentActivated(AbstractComponent source)
             {
-                game.enterState(GameState.IN_GAME);
+                if (hasLoadedLevels)
+                    game.enterState(GameState.IN_GAME, gameMain.getFadeOutTransition(), gameMain.getFadeInTransition());
             }
         });
 
-        this.btnLeft = new Button(gc, Resources.getImage("btn_left"), 120, 270);
+        this.btnLeft = new Button(gc, ResourceManager.getImage("btn_left"), 120, 270);
         this.btnLeft.setCenterX(100);
         this.btnLeft.setMouseDownColor(Color.yellow);
         this.btnLeft.setMouseOverColor(Color.green);
@@ -75,7 +76,7 @@ public class MainMenuState extends AbstractGameState
             }
         });
 
-        this.btnRight = new Button(gc, Resources.getImage("btn_right"), 600, 270);
+        this.btnRight = new Button(gc, ResourceManager.getImage("btn_right"), 600, 270);
         this.btnRight.setCenterX(700);
         this.btnRight.setMouseDownColor(Color.yellow);
         this.btnRight.setMouseOverColor(Color.green);
@@ -94,7 +95,14 @@ public class MainMenuState extends AbstractGameState
 
     private void updateThumbnail()
     {
-        this.levelThumbnail = Resources.getLevelImage(getGameData().getLevels().get(getGameData().getCurrentLevel()).getSimpleName());
+        if (getGameData().getLevelCount() > 0)
+        {
+            this.levelThumbnail = ResourceManager.getLevelImage(getGameData().getLevels().get(getGameData().getCurrentLevel()).getSimpleName());
+        }
+        else
+        {
+            this.levelThumbnail = ResourceManager.getImage("no_levels");
+        }
     }
 
     @Override
@@ -108,7 +116,7 @@ public class MainMenuState extends AbstractGameState
     {
         g.setBackground(Color.gray);
         g.setColor(Color.white);
-        titleFont.drawString(180, 50, "Open Hardest Game");
+        titleFont.drawString(140, 50, "World's Hardest Game");
 
         this.levelThumbnail.draw(200, 200, .5f);
 
@@ -123,6 +131,11 @@ public class MainMenuState extends AbstractGameState
         return GameState.MAIN_MENU;
     }
 
+    /**
+     * Gets the game data
+     * 
+     * @return The game data
+     */
     private GameData getGameData()
     {
         return this.gameMain.getGameData();

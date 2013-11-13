@@ -19,6 +19,10 @@ public class GameState
      * The main menu state
      */
     public static final int MAIN_MENU = 2;
+    /**
+     * The loading screen state
+     */
+    public static final int LOADING = 3;
 
     private GameState()
     {

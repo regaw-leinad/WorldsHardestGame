@@ -8,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Polygon;
 import com.regawmod.entity.Entity;
-import com.regawmod.hardestgame.Resources;
+import com.regawmod.hardestgame.ResourceManager;
 import com.regawmod.hardestgame.entity.Enemy;
 import com.regawmod.hardestgame.entity.GoldCoin;
 import com.regawmod.hardestgame.entity.Player;
@@ -97,6 +97,44 @@ public abstract class Level implements Updatable, Renderable
 
         this.totalCoins = this.goldCoins.size();
     }
+
+    /**
+     * Initialize the bounding polygon for the level here.
+     * Must initialize in clockwise order.
+     */
+    protected abstract void initBoundingPolygon();
+
+    /**
+     * Initialize the bounding polygon for the start zone here.
+     * Must initialize in clockwise order.
+     */
+    protected abstract void initStartZonePolygon();
+
+    /**
+     * Initialize the bounding polygon for the end zone here.
+     * Must initialize in clockwise order.
+     */
+    protected abstract void initEndZonePolygon();
+
+    /**
+     * Initialize all of the bounding polygons inside of the level's bounds
+     */
+    protected abstract void initInsidePolygons();
+
+    /**
+     * Initialize and add the enemies for the level here.
+     */
+    protected abstract void initEnemies();
+
+    /**
+     * Initialize and add the gold coins for the level here.
+     */
+    protected abstract void initGoldCoins();
+
+    /**
+     * Initialize the player's start position here.
+     */
+    protected abstract void initPlayerStartPosition();
 
     /**
      * Creates the level's bounding polygon from an array of floats.
@@ -200,17 +238,18 @@ public abstract class Level implements Updatable, Renderable
     /**
      * Adds a gold coin to the level.
      * 
-     * @param goldCoin The gold coin to add
+     * @param x The X coordinate of the gold coin
+     * @param y The Y coordinate of the gold coin
      */
-    protected final void addGoldCoin(GoldCoin goldCoin)
+    protected final void addGoldCoin(float x, float y)
     {
-        goldCoin.setCenterY(goldCoin.getCenterY() + LEVEL_OFFSET);
+        GoldCoin newCoin = new GoldCoin(x, y + LEVEL_OFFSET, this);
 
-        if (!this.boundingPoly.contains(goldCoin.getBody()))
-            throw new IllegalStateException("GoldCoin at x:" + goldCoin.getCenterX() + " y:" +
-                    (goldCoin.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
+        if (!this.boundingPoly.contains(newCoin.getBody()))
+            throw new IllegalStateException("GoldCoin at x:" + newCoin.getCenterX() + " y:" +
+                    (newCoin.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
 
-        this.goldCoins.add(goldCoin);
+        this.goldCoins.add(newCoin);
     }
 
     /**
@@ -381,44 +420,6 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Initialize the bounding polygon for the level here.
-     * Must initialize in clockwise order.
-     */
-    protected abstract void initBoundingPolygon();
-
-    /**
-     * Initialize all of the bounding polygons inside of the level's bounds
-     */
-    protected abstract void initInsidePolygons();
-
-    /**
-     * Initialize the player's start position here.
-     */
-    protected abstract void initPlayerStartPosition();
-
-    /**
-     * Initialize the bounding polygon for the end zone here.
-     * Must initialize in clockwise order.
-     */
-    protected abstract void initEndZonePolygon();
-
-    /**
-     * Initialize and add the enemies for the level here.
-     */
-    protected abstract void initEnemies();
-
-    /**
-     * Initialize and add the gold coins for the level here.
-     */
-    protected abstract void initGoldCoins();
-
-    /**
-     * Initialize the bounding polygon for the start zone here.
-     * Must initialize in clockwise order.
-     */
-    protected abstract void initStartZonePolygon();
-
-    /**
      * Gets a value indicating if the level has been completed.
      * 
      * @return If the level has been completed
@@ -433,7 +434,7 @@ public abstract class Level implements Updatable, Renderable
      */
     private void loadLevelImage()
     {
-        this.levelImage = Resources.getLevelImage(this.getClass().getSimpleName());
+        this.levelImage = ResourceManager.getLevelImage(this.getClass().getSimpleName());
     }
 
     /**

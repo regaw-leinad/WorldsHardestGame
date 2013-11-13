@@ -1,4 +1,4 @@
-package com.regawmod.hardestgame.user.enemy;
+package com.regawmod.hardestgame.entity.enemy;
 
 import java.util.ArrayList;
 import java.util.List;

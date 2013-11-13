@@ -40,7 +40,6 @@ public class InGameState extends AbstractGameState
     @Override
     public void init(GameContainer gc, StateBasedGame game) throws SlickException
     {
-        //this.level = getGameData().getLevelInstance();
         this.createNextLevel = true;
     }
 
@@ -48,7 +47,10 @@ public class InGameState extends AbstractGameState
     public void update(GameContainer gc, StateBasedGame game, float dt) throws SlickException
     {
         if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
-            gc.exit();
+        {
+            createNextLevel = true;
+            game.enterState(GameState.MAIN_MENU, this.gameMain.getFadeOutTransition(), this.gameMain.getFadeInTransition());
+        }
 
         level.update(gc, dt);
 
@@ -101,6 +103,11 @@ public class InGameState extends AbstractGameState
         return GameState.IN_GAME;
     }
 
+    /**
+     * Gets the game data
+     * 
+     * @return The game data
+     */
     private GameData getGameData()
     {
         return this.gameMain.getGameData();
