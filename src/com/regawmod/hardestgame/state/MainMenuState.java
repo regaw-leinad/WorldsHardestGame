@@ -10,6 +10,8 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import com.regawmod.hardestgame.GameData;
 import com.regawmod.hardestgame.GameMain;
 import com.regawmod.hardestgame.ResourceManager;
@@ -58,7 +60,7 @@ public class MainMenuState extends AbstractGameState
             public void componentActivated(AbstractComponent source)
             {
                 if (hasLoadedLevels)
-                    game.enterState(GameState.IN_GAME, gameMain.getFadeOutTransition(), gameMain.getFadeInTransition());
+                    game.enterState(GameState.IN_GAME, new FadeOutTransition(), new FadeInTransition());
             }
         });
 
@@ -145,5 +147,11 @@ public class MainMenuState extends AbstractGameState
     public void enter(GameContainer gc, StateBasedGame game) throws SlickException
     {
         updateThumbnail();
+    }
+
+    @Override
+    public void leave(GameContainer gc, StateBasedGame game) throws SlickException
+    {
+        gc.getInput().clearKeyPressedRecord();
     }
 }

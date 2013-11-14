@@ -49,7 +49,7 @@ public class InGameState extends AbstractGameState
         if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
         {
             createNextLevel = true;
-            game.enterState(GameState.MAIN_MENU, this.gameMain.getFadeOutTransition(), this.gameMain.getFadeInTransition());
+            game.enterState(GameState.MAIN_MENU, new FadeOutTransition(), new FadeInTransition());
         }
 
         level.update(gc, dt);
@@ -95,6 +95,12 @@ public class InGameState extends AbstractGameState
             this.level = getGameData().getLevelInstance();
             this.createNextLevel = false;
         }
+    }
+
+    @Override
+    public void leave(GameContainer gc, StateBasedGame game) throws SlickException
+    {
+        gc.getInput().clearKeyPressedRecord();
     }
 
     @Override

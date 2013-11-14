@@ -55,9 +55,15 @@ public class LevelCompleteGameState extends AbstractGameState
     }
 
     @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException
+    public void enter(GameContainer gc, StateBasedGame game) throws SlickException
     {
         getGameData().incrementLevel();
+    }
+
+    @Override
+    public void leave(GameContainer gc, StateBasedGame game) throws SlickException
+    {
+        gc.getInput().clearKeyPressedRecord();
     }
 
     @Override

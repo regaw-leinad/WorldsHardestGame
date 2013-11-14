@@ -46,6 +46,23 @@ public class WaveEnemy extends Enemy
                 this.turnAround();
             }
 
+            if (getSpeed() < 0 && getCenterY() > this.centerY)
+            {
+                setSpeed(getSpeed() + 20f * dt);
+            }
+            else if (getSpeed() < 0 && getCenterY() <= this.centerY)
+            {
+                setSpeed(getSpeed() - 20f * dt);
+            }
+            else if (getSpeed() > 0 && getCenterY() > this.centerY)
+            {
+                setSpeed(getSpeed() - 20f * dt);
+            }
+            else if (getSpeed() > 0 && getCenterY() <= this.centerY)
+            {
+                setSpeed(getSpeed() + 20f * dt);
+            }
+
             this.moveY(getSpeed() * dt);
         }
     }
