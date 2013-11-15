@@ -12,7 +12,7 @@ import com.regawmod.hardestgame.level.Level;
  * 
  * @author Dan Wager
  */
-public class GoldCoin extends Entity
+public final class GoldCoin extends Entity
 {
     /** How fast the coin fades out on collection */
     public static final float FADE_ALPHA_PER_SEC = 2f;

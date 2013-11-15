@@ -12,7 +12,7 @@ import com.regawmod.hardestgame.state.MainMenuState;
  * 
  * @author Dan Wager
  */
-public class GameMain extends StateBasedGame
+public final class GameMain extends StateBasedGame
 {
     /** The game's data */
     private GameData gameData;

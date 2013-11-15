@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
  * 
  * @author Dan Wager
  */
-public class ResourceManager
+public final class ResourceManager
 {
     /** The collection of images */
     private static Map<String, Image> images;

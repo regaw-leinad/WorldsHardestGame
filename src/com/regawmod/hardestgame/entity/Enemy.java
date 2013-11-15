@@ -55,7 +55,7 @@ public abstract class Enemy extends MovableEntity
      * 
      * @return If the enemy collided with a wall
      */
-    protected boolean collidesWithWall()
+    protected final boolean collidesWithWall()
     {
         return this.level.collidesWithWall(this);
     }
@@ -65,7 +65,7 @@ public abstract class Enemy extends MovableEntity
      * 
      * @return If the enemy collided with a zone
      */
-    protected boolean collidesWithZone()
+    protected final boolean collidesWithZone()
     {
         return this.level.collidesWithZones(this);
     }
@@ -75,7 +75,7 @@ public abstract class Enemy extends MovableEntity
      * 
      * @return If the enemy is bounded
      */
-    public boolean isBoundedByLevel()
+    public final boolean isBoundedByLevel()
     {
         return this.boundedByLevel;
     }

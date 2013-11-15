@@ -8,7 +8,7 @@ import org.newdawn.slick.SlickException;
  * 
  * @author Dan Wager
  */
-public class MainEntryPoint
+public final class MainEntryPoint
 {
     public static void main(String[] args)
     {

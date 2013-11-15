@@ -5,7 +5,7 @@ package com.regawmod.hardestgame.state;
  * 
  * @author Dan Wager
  */
-public class GameState
+public final class GameState
 {
     /**
      * The state while playing a level.

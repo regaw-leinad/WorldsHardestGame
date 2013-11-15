@@ -8,7 +8,7 @@ import com.regawmod.hardestgame.level.Level;
  * 
  * @author Dan Wager
  */
-public class GameData
+public final class GameData
 {
     /** The level loader */
     private LevelLoader levelLoader;

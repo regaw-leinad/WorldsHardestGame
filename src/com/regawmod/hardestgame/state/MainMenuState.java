@@ -22,7 +22,7 @@ import com.regawmod.slick.ui.Button;
  * 
  * @author Dan Wager
  */
-public class MainMenuState extends AbstractGameState
+public final class MainMenuState extends AbstractGameState
 {
     /** The main game instance */
     private GameMain gameMain;

@@ -1,0 +1,8 @@
+com.regawmod.entity
+com.regawmod.hardestgame
+com.regawmod.hardestgame.entity
+com.regawmod.hardestgame.entity.enemy
+com.regawmod.hardestgame.level
+com.regawmod.hardestgame.state
+com.regawmod.slick.interfaces
+com.regawmod.slick.ui

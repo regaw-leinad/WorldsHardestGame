@@ -16,7 +16,7 @@ import com.regawmod.hardestgame.GameMain;
  * 
  * @author Dan Wager
  */
-public class LevelCompleteGameState extends AbstractGameState
+public final class LevelCompleteGameState extends AbstractGameState
 {
     /** The main game instance */
     private GameMain gameMain;

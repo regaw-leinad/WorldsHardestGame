@@ -17,7 +17,7 @@ import com.regawmod.hardestgame.level.Level;
  * 
  * @author Dan Wager
  */
-public class InGameState extends AbstractGameState
+public final class InGameState extends AbstractGameState
 {
     /** The current level we're playing */
     private Level level;

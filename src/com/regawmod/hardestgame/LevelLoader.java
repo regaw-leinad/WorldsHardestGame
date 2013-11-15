@@ -23,7 +23,7 @@ import com.regawmod.hardestgame.level.Level;
  * 
  * @author Dan Wager
  */
-public class LevelLoader
+public final class LevelLoader
 {
     /** The directory that is searched for level jars */
     public static final File LEVEL_DIRECTORY = new File(System.getProperty("user.dir") + File.separator + "levels");
