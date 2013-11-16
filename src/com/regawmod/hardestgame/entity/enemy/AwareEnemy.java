@@ -52,7 +52,16 @@ public class AwareEnemy extends Enemy
     private void moveEnemy(float dt)
     {
         this.moveX((float)(Math.cos(theta) * this.getSpeed() * dt));
+
+        if (this.collidesWithWall() || this.collidesWithZone())
+            while (this.collidesWithWall() || this.collidesWithZone())
+                this.moveX(this.getBactrackComponent(dt));
+
         this.moveY((float)(Math.sin(theta) * this.getSpeed() * dt));
+
+        if (this.collidesWithWall() || this.collidesWithZone())
+            while (this.collidesWithWall() || this.collidesWithZone())
+                this.moveY(this.getBactrackComponent(dt));
     }
 
     /**

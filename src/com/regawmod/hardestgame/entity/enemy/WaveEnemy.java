@@ -19,7 +19,7 @@ public class WaveEnemy extends Enemy
 
         setSpeed(speed);
 
-        this.centerY = centerY + Level.LEVEL_OFFSET;
+        this.centerY = centerY;
         this.amplitude = amplitude;
         this.delay = delay;
         this.shouldDelay = true;

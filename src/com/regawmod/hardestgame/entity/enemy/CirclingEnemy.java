@@ -36,7 +36,7 @@ public class CirclingEnemy extends Enemy
         super(cX + (float)Math.cos(initAngle) * radius, cY + (float)Math.sin(initAngle) * radius, level);
 
         this.revolveAroundX = cX;
-        this.revolveAroundY = cY + Level.LEVEL_OFFSET;
+        this.revolveAroundY = cY;
         this.radius = radius;
         this.angle = initAngle;
 

@@ -22,15 +22,8 @@ import com.regawmod.slick.interfaces.Updatable;
  */
 public abstract class Level implements Updatable, Renderable
 {
-    /** The offset of the level in the window, public for now :( */
-    public static final float LEVEL_OFFSET = 60f;
-
     /** The player in the level */
     private Player player;
-    /** The player's starting X coordinate */
-    private float playerStartX;
-    /** The player's starting Y coordinate */
-    private float playerStartY;
     /** If the player has died */
     private boolean playerDied;
 
@@ -77,7 +70,7 @@ public abstract class Level implements Updatable, Renderable
         initInsidePolygons();
         initStartZonePolygon();
         initEndZonePolygon();
-        initPlayerStartPosition();
+        initPlayer();
 
         checkZoneStates();
 
@@ -116,18 +109,18 @@ public abstract class Level implements Updatable, Renderable
     protected abstract ArrayList<float[]> getInsideLevelBoundingPolygons();
 
     /**
-     * Gets the player's starting X coordinate
+     * Gets a value indicating the starting X coordinate of the player.
      * 
-     * @return The player's starting X coordinate
+     * @return The starting X coordinate of the player
      */
-    protected abstract float initPlayerStartX();
+    public abstract float getPlayerStartX();
 
     /**
-     * Gets the player's starting Y coordinate
+     * Gets a value indicating the starting Y coordinate of the player.
      * 
-     * @return The player's starting Y coordinate
+     * @return The starting Y coordinate of the player
      */
-    protected abstract float initPlayerStartY();
+    public abstract float getPlayerStartY();
 
     /**
      * Initialize and add the enemies for the level here.
@@ -151,9 +144,6 @@ public abstract class Level implements Updatable, Renderable
         if (points.length < 8)
             throw new IllegalArgumentException("Bounding polygon is not set up correctly!");
 
-        for (int i = 1; i < points.length; i += 2)
-            points[i] += LEVEL_OFFSET;
-
         this.boundingPoly = new Polygon(points);
     }
 
@@ -169,9 +159,6 @@ public abstract class Level implements Updatable, Renderable
         if (points.length < 8)
             throw new IllegalArgumentException("Start zone's bounding polygon is not set up correctly!");
 
-        for (int i = 1; i < points.length; i += 2)
-            points[i] += LEVEL_OFFSET;
-
         this.startZone = new Polygon(points);
     }
 
@@ -186,9 +173,6 @@ public abstract class Level implements Updatable, Renderable
 
         if (points.length < 8)
             throw new IllegalArgumentException("End zone's bounding polygon is not set up correctly!");
-
-        for (int i = 1; i < points.length; i += 2)
-            points[i] += LEVEL_OFFSET;
 
         this.endZone = new Polygon(points);
     }
@@ -211,9 +195,6 @@ public abstract class Level implements Updatable, Renderable
                 if (newPoints.length < 8)
                     throw new IllegalArgumentException("Inside bounding polygon #" + (i + 1) + " is not set up correctly!");
 
-                for (int j = 1; j < newPoints.length; j += 2)
-                    newPoints[j] += LEVEL_OFFSET;
-
                 this.insideLevelPolygons.add(new Polygon(newPoints));
             }
         }
@@ -222,11 +203,8 @@ public abstract class Level implements Updatable, Renderable
     /**
      * Initialize the player's start position here.
      */
-    private void initPlayerStartPosition()
+    private void initPlayer()
     {
-        this.playerStartX = initPlayerStartX();
-        this.playerStartY = initPlayerStartY() + LEVEL_OFFSET;
-
         this.player = new Player(this);
     }
 
@@ -239,11 +217,11 @@ public abstract class Level implements Updatable, Renderable
     {
         for (Enemy e : enemies)
         {
-            e.setCenterY(e.getCenterY() + LEVEL_OFFSET);
+            e.setCenterY(e.getCenterY());
 
             if (e.isBoundedByLevel() && !this.boundingPoly.contains(e.getBody()))
                 throw new IllegalStateException("Bounded Enemy at x:" + e.getCenterX() + " y:" +
-                        (e.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
+                        (e.getCenterY()) + " is placed out of bounds of the level!");
 
             this.enemies.add(e);
         }
@@ -256,11 +234,11 @@ public abstract class Level implements Updatable, Renderable
      */
     protected final void addEnemy(Enemy enemy)
     {
-        enemy.setCenterY(enemy.getCenterY() + LEVEL_OFFSET);
+        enemy.setCenterY(enemy.getCenterY());
 
         if (enemy.isBoundedByLevel() && !this.boundingPoly.contains(enemy.getBody()))
             throw new IllegalStateException("Bounded Enemy at x:" + enemy.getCenterX() + " y:" +
-                    (enemy.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
+                    (enemy.getCenterY()) + " is placed out of bounds of the level!");
 
         this.enemies.add(enemy);
     }
@@ -273,11 +251,11 @@ public abstract class Level implements Updatable, Renderable
      */
     protected final void addGoldCoin(float x, float y)
     {
-        GoldCoin newCoin = new GoldCoin(x, y + LEVEL_OFFSET, this);
+        GoldCoin newCoin = new GoldCoin(x, y, this);
 
         if (!this.boundingPoly.contains(newCoin.getBody()))
             throw new IllegalStateException("GoldCoin at x:" + newCoin.getCenterX() + " y:" +
-                    (newCoin.getCenterY() - LEVEL_OFFSET) + " is placed out of bounds of the level!");
+                    (newCoin.getCenterY()) + " is placed out of bounds of the level!");
 
         this.goldCoins.add(newCoin);
     }
@@ -397,26 +375,6 @@ public abstract class Level implements Updatable, Renderable
     {
         return entity.getBody().intersects(this.startZone) || this.startZone.contains(entity.getBody()) ||
                 entity.getBody().intersects(this.endZone) || this.endZone.contains(entity.getBody());
-    }
-
-    /**
-     * Gets a value indicating the starting X coordinate of the player.
-     * 
-     * @return The starting X coordinate of the player
-     */
-    public final float getPlayerStartX()
-    {
-        return this.playerStartX;
-    }
-
-    /**
-     * Gets a value indicating the starting Y coordinate of the player.
-     * 
-     * @return The starting Y coordinate of the player
-     */
-    public final float getPlayerStartY()
-    {
-        return this.playerStartY;
     }
 
     /**
@@ -544,7 +502,7 @@ public abstract class Level implements Updatable, Renderable
     @Override
     public final void render(Graphics g)
     {
-        this.levelImage.draw(0, LEVEL_OFFSET);
+        this.levelImage.draw(0, 0);
 
         renderEnemies(g);
         renderPlayer(g);
@@ -605,20 +563,6 @@ public abstract class Level implements Updatable, Renderable
         }
 
         onPlayerRespawn();
-    }
-
-    /**
-     * Sets the player's starting position.
-     * 
-     * @param x The X coordinate
-     * @param y The Y coordinate
-     */
-    protected final void setPlayerStartPosition(float x, float y)
-    {
-        this.playerStartX = x;
-        this.playerStartY = y + LEVEL_OFFSET;
-
-        this.player = new Player(this);
     }
 
     @Override

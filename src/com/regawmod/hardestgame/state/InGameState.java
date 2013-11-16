@@ -81,10 +81,10 @@ public final class InGameState extends AbstractGameState
     private void renderStats(GameContainer gc, Graphics g)
     {
         g.setColor(Color.black);
-        g.fillRect(0, 0, gc.getWidth(), 60);
+        g.fillRect(0, 540, gc.getWidth(), 60);
 
         g.setColor(Color.white);
-        g.drawString("Deaths: " + getGameData().getAmountOfDeaths(), 280, 10);
+        g.drawString("Deaths: " + getGameData().getAmountOfDeaths(), 280, 550);
     }
 
     @Override

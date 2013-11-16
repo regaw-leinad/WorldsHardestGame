@@ -28,7 +28,7 @@ public final class GoldCoin extends Entity
      * Creates a new {@link GoldCoin}.
      * 
      * @param x The coin's X position
-     * @param y The coin's Y postition
+     * @param y The coin's Y position
      * @param level The level
      */
     public GoldCoin(float x, float y, Level level)
