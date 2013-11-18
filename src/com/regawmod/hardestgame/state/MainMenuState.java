@@ -29,11 +29,12 @@ public final class MainMenuState extends AbstractGameState
 
     private Font title = new Font("Consolas", Font.BOLD, 48);
     private TrueTypeFont titleFont = new TrueTypeFont(title, true);
-    private Button playButton;
+    private Button btnPlay;
     private Button btnLeft;
     private Button btnRight;
     private Image levelThumbnail;
     private boolean hasLoadedLevels;
+    private Color backgroundColor;
 
     /**
      * Creates a new {@link MainMenuState}.
@@ -43,6 +44,7 @@ public final class MainMenuState extends AbstractGameState
     public MainMenuState(GameMain game)
     {
         this.gameMain = game;
+        this.backgroundColor = new Color(0, 127, 127);
     }
 
     @Override
@@ -50,11 +52,11 @@ public final class MainMenuState extends AbstractGameState
     {
         this.hasLoadedLevels = getGameData().getLevelCount() > 0;
 
-        this.playButton = new Button(gc, ResourceManager.getImage("play_normal"), 260, 490);
-        this.playButton.setCenterX(400);
-        this.playButton.setMouseDownColor(Color.yellow);
-        this.playButton.setMouseOverColor(Color.green);
-        this.playButton.addListener(new ComponentListener()
+        this.btnPlay = new Button(gc, ResourceManager.getImage("btn_play"), 0, 485);
+        this.btnPlay.setCenterX(400);
+        this.btnPlay.setMouseOverImage(ResourceManager.getImage("btn_play_h"));
+        this.btnPlay.setMouseDownImage(ResourceManager.getImage("btn_play_p"));
+        this.btnPlay.addListener(new ComponentListener()
         {
             @Override
             public void componentActivated(AbstractComponent source)
@@ -64,24 +66,10 @@ public final class MainMenuState extends AbstractGameState
             }
         });
 
-        this.btnLeft = new Button(gc, ResourceManager.getImage("btn_left"), 120, 270);
-        this.btnLeft.setCenterX(100);
-        this.btnLeft.setMouseDownColor(Color.yellow);
-        this.btnLeft.setMouseOverColor(Color.green);
-        this.btnLeft.addListener(new ComponentListener()
-        {
-            @Override
-            public void componentActivated(AbstractComponent source)
-            {
-                getGameData().decrementLevel();
-                updateThumbnail();
-            }
-        });
-
-        this.btnRight = new Button(gc, ResourceManager.getImage("btn_right"), 600, 270);
+        this.btnRight = new Button(gc, ResourceManager.getImage("btn_arrow"), 600, 250);
         this.btnRight.setCenterX(700);
-        this.btnRight.setMouseDownColor(Color.yellow);
-        this.btnRight.setMouseOverColor(Color.green);
+        this.btnRight.setMouseOverImage(ResourceManager.getImage("btn_arrow_h"));
+        this.btnRight.setMouseDownImage(ResourceManager.getImage("btn_arrow_p"));
         this.btnRight.addListener(new ComponentListener()
         {
             @Override
@@ -92,37 +80,51 @@ public final class MainMenuState extends AbstractGameState
             }
         });
 
+        this.btnLeft = new Button(gc, ResourceManager.getImage("btn_arrow").getFlippedCopy(true, false), 120, 250);
+        this.btnLeft.setCenterX(100);
+        this.btnLeft.setMouseOverImage(ResourceManager.getImage("btn_arrow_h").getFlippedCopy(true, false));
+        this.btnLeft.setMouseDownImage(ResourceManager.getImage("btn_arrow_p").getFlippedCopy(true, false));
+        this.btnLeft.addListener(new ComponentListener()
+        {
+            @Override
+            public void componentActivated(AbstractComponent source)
+            {
+                getGameData().decrementLevel();
+                updateThumbnail();
+            }
+        });
+
         updateThumbnail();
     }
 
     private void updateThumbnail()
     {
         if (getGameData().getLevelCount() > 0)
-        {
             this.levelThumbnail = ResourceManager.getLevelImage(getGameData().getLevels().get(getGameData().getCurrentLevel()).getSimpleName());
-        }
         else
-        {
             this.levelThumbnail = ResourceManager.getImage("no_levels");
-        }
     }
 
     @Override
     public void update(GameContainer gc, StateBasedGame game, float dt) throws SlickException
     {
-
+        // Nothing to update! Woo hoo!
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException
     {
-        g.setBackground(Color.gray);
+        g.setBackground(this.backgroundColor);
         g.setColor(Color.white);
         titleFont.drawString(140, 50, "World's Hardest Game");
 
-        this.levelThumbnail.draw(200, 200, .5f);
+        g.setColor(Color.black);
+        g.setLineWidth(2f);
+        g.drawRect(199, 178, 402, 272);
 
-        this.playButton.render(gc, g);
+        this.levelThumbnail.draw(200, 180, .5f);
+
+        this.btnPlay.render(gc, g);
         this.btnLeft.render(gc, g);
         this.btnRight.render(gc, g);
     }

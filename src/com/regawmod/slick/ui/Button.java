@@ -57,7 +57,7 @@ public class Button extends MouseOverArea
     /**
      * Sets the center point's Y coordinate
      * 
-     * @param cy The Y coordinate of the center point
+     * @param cY The Y coordinate of the center point
      */
     public void setCenterY(float cY)
     {

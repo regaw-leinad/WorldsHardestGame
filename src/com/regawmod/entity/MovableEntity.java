@@ -73,7 +73,19 @@ public abstract class MovableEntity extends Entity
      */
     protected float getBactrackComponent(float dt)
     {
-        return this.speed / Math.abs(this.speed) * -dt;
+        return getBactrackComponent(this.speed, dt);
+    }
+
+    /**
+     * Gets a value indicating the amount of pixels to move when backtracking to the wall after collision.
+     * 
+     * @param speed The current speed of the entity
+     * @param dt The delta time between frames
+     * @return The distance to travel backwards
+     */
+    protected float getBactrackComponent(float speed, float dt)
+    {
+        return speed / Math.abs(speed) * -dt;
     }
 
     /**

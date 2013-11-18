@@ -1,7 +1,6 @@
 package com.regawmod.hardestgame.level;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -32,7 +31,7 @@ public abstract class Level implements Updatable, Renderable
     /** Our level's bounding polygon */
     private Polygon boundingPoly;
     /** Extra bounding polygons inside of the level */
-    private List<Polygon> insideLevelPolygons;
+    private ArrayList<Polygon> insideLevelPolygons;
     /** The bounding poly for the start zone */
     private Polygon startZone;
     /** The bounding poly for the end zone */
@@ -42,9 +41,9 @@ public abstract class Level implements Updatable, Renderable
     private boolean levelCompleted;
 
     /** The collection of enemies in the level */
-    private List<Enemy> enemies;
+    private ArrayList<Enemy> enemies;
     /** The collection of gold coins in the level */
-    private List<GoldCoin> goldCoins;
+    private ArrayList<GoldCoin> goldCoins;
 
     /** The number of gold coins collected by the player */
     private int coinsCollected;
@@ -56,11 +55,7 @@ public abstract class Level implements Updatable, Renderable
      */
     protected Level()
     {
-        this.enemies = new ArrayList<Enemy>();
-        this.goldCoins = new ArrayList<GoldCoin>();
-
         this.playerDied = false;
-
         this.levelCompleted = false;
         this.coinsCollected = 0;
 
@@ -76,8 +71,6 @@ public abstract class Level implements Updatable, Renderable
 
         initEnemies();
         initGoldCoins();
-
-        this.totalCoins = this.goldCoins.size();
     }
 
     /**
@@ -123,23 +116,52 @@ public abstract class Level implements Updatable, Renderable
     public abstract float getPlayerStartY();
 
     /**
+     * Gets an ArrayList containing all of the enemies in the level.
+     * 
+     * @return An ArrayList containing all of the enemies in the level
+     */
+    protected abstract ArrayList<Enemy> getEnemies();
+
+    /**
+     * Gets an ArrayList containing all of the gold coins in the level.
+     * 
+     * @return An ArrayList containing all of the gold coins in the level
+     */
+    protected abstract ArrayList<GoldCoin> getGoldCoins();
+
+    /**
      * Initialize and add the enemies for the level here.
      */
-    protected abstract void initEnemies();
+    private void initEnemies()
+    {
+        this.enemies = getEnemies();
+
+        if (this.enemies == null)
+            this.enemies = new ArrayList<Enemy>();
+    }
 
     /**
      * Initialize and add the gold coins for the level here.
      */
-    protected abstract void initGoldCoins();
+    private void initGoldCoins()
+    {
+        this.goldCoins = getGoldCoins();
+
+        if (this.goldCoins == null)
+            this.goldCoins = new ArrayList<GoldCoin>();
+
+        this.totalCoins = this.goldCoins.size();
+    }
 
     /**
      * Initialize the bounding polygon for the level here.
      */
     private void initBoundingPolygon()
     {
-        this.boundingPoly = new Polygon();
-
         float[] points = this.getBoundingPolygon();
+
+        if (points == null)
+            points = new float[0];
 
         if (points.length < 8)
             throw new IllegalArgumentException("Bounding polygon is not set up correctly!");
@@ -156,6 +178,9 @@ public abstract class Level implements Updatable, Renderable
 
         float[] points = this.getStartZoneBoundingPolygon();
 
+        if (points == null)
+            points = new float[0];
+
         if (points.length < 8)
             throw new IllegalArgumentException("Start zone's bounding polygon is not set up correctly!");
 
@@ -171,6 +196,9 @@ public abstract class Level implements Updatable, Renderable
 
         float[] points = this.getEndZoneBoundingPolygon();
 
+        if (points == null)
+            points = new float[0];
+
         if (points.length < 8)
             throw new IllegalArgumentException("End zone's bounding polygon is not set up correctly!");
 
@@ -178,13 +206,13 @@ public abstract class Level implements Updatable, Renderable
     }
 
     /**
-     * Initialize all of the bounding polygons inside of the level's bounds
+     * Initialize all of the bounding polygons inside of the level's bounds.
      */
     private void initInsidePolygons()
     {
         this.insideLevelPolygons = new ArrayList<Polygon>();
 
-        List<float[]> points = getInsideLevelBoundingPolygons();
+        ArrayList<float[]> points = getInsideLevelBoundingPolygons();
 
         if (points != null)
         {
@@ -206,58 +234,6 @@ public abstract class Level implements Updatable, Renderable
     private void initPlayer()
     {
         this.player = new Player(this);
-    }
-
-    /**
-     * Adds a collection of enemies to the level.
-     * 
-     * @param enemies The collection of enemies to add to the level
-     */
-    protected final void addEnemies(List<Enemy> enemies)
-    {
-        for (Enemy e : enemies)
-        {
-            e.setCenterY(e.getCenterY());
-
-            if (e.isBoundedByLevel() && !this.boundingPoly.contains(e.getBody()))
-                throw new IllegalStateException("Bounded Enemy at x:" + e.getCenterX() + " y:" +
-                        (e.getCenterY()) + " is placed out of bounds of the level!");
-
-            this.enemies.add(e);
-        }
-    }
-
-    /**
-     * Adds an enemy to the level.
-     * 
-     * @param enemy The enemy to add to the level
-     */
-    protected final void addEnemy(Enemy enemy)
-    {
-        enemy.setCenterY(enemy.getCenterY());
-
-        if (enemy.isBoundedByLevel() && !this.boundingPoly.contains(enemy.getBody()))
-            throw new IllegalStateException("Bounded Enemy at x:" + enemy.getCenterX() + " y:" +
-                    (enemy.getCenterY()) + " is placed out of bounds of the level!");
-
-        this.enemies.add(enemy);
-    }
-
-    /**
-     * Adds a gold coin to the level.
-     * 
-     * @param x The X coordinate of the gold coin
-     * @param y The Y coordinate of the gold coin
-     */
-    protected final void addGoldCoin(float x, float y)
-    {
-        GoldCoin newCoin = new GoldCoin(x, y, this);
-
-        if (!this.boundingPoly.contains(newCoin.getBody()))
-            throw new IllegalStateException("GoldCoin at x:" + newCoin.getCenterX() + " y:" +
-                    (newCoin.getCenterY()) + " is placed out of bounds of the level!");
-
-        this.goldCoins.add(newCoin);
     }
 
     /**

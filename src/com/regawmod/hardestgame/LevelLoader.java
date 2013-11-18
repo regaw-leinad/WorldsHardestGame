@@ -64,6 +64,7 @@ public final class LevelLoader
             {
                 List<String> classNames = getClassNames(f.getAbsolutePath());
                 List<String> imageNames = getImageNames(f.getAbsolutePath());
+                Class imageLoadRefClass = null;
 
                 for (String className : classNames)
                 {
@@ -75,14 +76,16 @@ public final class LevelLoader
                     addURLToClasspath(f.toURI().toURL());
 
                     Class currentClass = getClass(f, name);
+                    imageLoadRefClass = currentClass;
                     Class superClass = currentClass.getSuperclass();
 
                     if (superClass.getName().equals(LEVEL_SUPERCLASS))
-                    {
                         pluginCollection.add(currentClass);
-                        loadLevelImages(imageNames, currentClass);
-                    }
                 }
+
+                // Brought outside to load only once per jar
+                if (imageLoadRefClass != null)
+                    loadLevelImages(imageNames, imageLoadRefClass);
             }
             catch (Exception e)
             {

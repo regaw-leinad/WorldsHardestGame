@@ -31,7 +31,7 @@ public class AwareEnemy extends Enemy
         this.level = level;
         this.shouldTrack = true;
 
-        setSpeed(30f);
+        setSpeed(40f);
     }
 
     @Override
@@ -51,17 +51,20 @@ public class AwareEnemy extends Enemy
      */
     private void moveEnemy(float dt)
     {
-        this.moveX((float)(Math.cos(theta) * this.getSpeed() * dt));
+        float xSpeed = (float)(Math.cos(theta) * this.getSpeed() * dt);
+        float ySpeed = (float)(Math.sin(theta) * this.getSpeed() * dt);
+
+        this.moveX(xSpeed);
 
         if (this.collidesWithWall() || this.collidesWithZone())
             while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveX(this.getBactrackComponent(dt));
+                this.moveX(this.getBactrackComponent(xSpeed, dt));
 
-        this.moveY((float)(Math.sin(theta) * this.getSpeed() * dt));
+        this.moveY(ySpeed);
 
         if (this.collidesWithWall() || this.collidesWithZone())
             while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveY(this.getBactrackComponent(dt));
+                this.moveY(this.getBactrackComponent(ySpeed, dt));
     }
 
     /**
