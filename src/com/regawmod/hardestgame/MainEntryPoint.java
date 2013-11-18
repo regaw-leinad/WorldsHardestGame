@@ -17,7 +17,7 @@ public final class MainEntryPoint
             AppGameContainer game = new AppGameContainer(new GameMain("World's Hardest Game - NSCC CSC"));
             game.setAlwaysRender(true);
             game.setDisplayMode(800, 600, false);
-            //game.setShowFPS(true);
+            game.setShowFPS(false);
             game.setTargetFrameRate(60);
             game.setVSync(true);
             game.start();
