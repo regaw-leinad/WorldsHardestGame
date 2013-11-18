@@ -56,15 +56,13 @@ public class AwareEnemy extends Enemy
 
         this.moveX(xSpeed);
 
-        if (this.collidesWithWall() || this.collidesWithZone())
-            while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveX(this.getBactrackComponent(xSpeed, dt));
+        while (this.collidesWithWall() || this.collidesWithZone())
+            this.moveX(this.getBactrackComponent(xSpeed, dt));
 
         this.moveY(ySpeed);
 
-        if (this.collidesWithWall() || this.collidesWithZone())
-            while (this.collidesWithWall() || this.collidesWithZone())
-                this.moveY(this.getBactrackComponent(ySpeed, dt));
+        while (this.collidesWithWall() || this.collidesWithZone())
+            this.moveY(this.getBactrackComponent(ySpeed, dt));
     }
 
     /**
