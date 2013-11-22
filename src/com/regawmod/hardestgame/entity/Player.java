@@ -73,8 +73,8 @@ public final class Player extends MovableEntity
             Input input = gc.getInput();
             float distance = getSpeed() * dt;
 
-            updateY(input, distance);
-            updateX(input, distance);
+            updateY(input, distance, dt);
+            updateX(input, distance, dt);
 
             checkEnemyCollision();
             checkGoldCoinCollision();
@@ -133,7 +133,7 @@ public final class Player extends MovableEntity
      * @param input The input
      * @param distance How far to move this frame, if possible
      */
-    private void updateX(Input input, float distance)
+    private void updateX(Input input, float distance, float dt)
     {
         float dx = 0;
 
@@ -143,7 +143,7 @@ public final class Player extends MovableEntity
         if (input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT))
             dx += distance;
 
-        moveAndCheckCollisionsX(dx);
+        moveAndCheckCollisionsX(dx, dt);
     }
 
     /**
@@ -152,7 +152,7 @@ public final class Player extends MovableEntity
      * @param input The input
      * @param distance How far to move this frame, if possible
      */
-    private void updateY(Input input, float distance)
+    private void updateY(Input input, float distance, float dt)
     {
         float dy = 0;
 
@@ -162,7 +162,7 @@ public final class Player extends MovableEntity
         if (input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN))
             dy += distance;
 
-        moveAndCheckCollisionsY(dy);
+        moveAndCheckCollisionsY(dy, dt);
     }
 
     /**
@@ -170,17 +170,12 @@ public final class Player extends MovableEntity
      * 
      * @param dy How far to move
      */
-    private void moveAndCheckCollisionsY(float dy)
+    private void moveAndCheckCollisionsY(float dy, float dt)
     {
         this.moveY(dy);
 
         while (this.collidedWithWall())
-        {
-            if (dy <= 0)
-                this.moveY(.1f);
-            else
-                this.moveY(-.1f);
-        }
+            this.moveY(this.getBactrackComponent(dy, dt));
     }
 
     /**
@@ -188,17 +183,12 @@ public final class Player extends MovableEntity
      * 
      * @param dx How far to move
      */
-    private void moveAndCheckCollisionsX(float dx)
+    private void moveAndCheckCollisionsX(float dx, float dt)
     {
         this.moveX(dx);
 
         while (this.collidedWithWall())
-        {
-            if (dx <= 0)
-                this.moveX(.1f);
-            else
-                this.moveX(-.1f);
-        }
+            this.moveX(this.getBactrackComponent(dx, dt));
     }
 
     @Override

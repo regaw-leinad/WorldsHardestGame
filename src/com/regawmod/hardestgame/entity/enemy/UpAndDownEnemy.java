@@ -20,7 +20,7 @@ public class UpAndDownEnemy extends Enemy
      */
     public UpAndDownEnemy(float x, float y, float speed, Level level)
     {
-        super(x, y, level, true);
+        super(x, y, level);
 
         this.setSpeed(speed);
     }

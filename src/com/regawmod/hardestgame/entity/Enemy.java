@@ -19,8 +19,6 @@ public abstract class Enemy extends MovableEntity
 
     /** The level */
     private Level level;
-    /** If the enemy should be bounded by the level's bounds */
-    private boolean boundedByLevel;
 
     /**
      * Creates a new {@link Enemy}
@@ -29,25 +27,11 @@ public abstract class Enemy extends MovableEntity
      * @param y The enemy's Y position
      * @param level The level
      */
-    protected Enemy(float x, float y, Level level)
-    {
-        this(x, y, level, false);
-    }
-
-    /**
-     * Creates a new {@link Enemy}
-     * 
-     * @param x The enemy's X position
-     * @param y The enemy's Y position
-     * @param level The level
-     * @param bounded If the enemy is bounded by the level
-     */
-    protected Enemy(float x, float y, Level level, boolean bounded)
+    public Enemy(float x, float y, Level level)
     {
         super(new Circle(x, y, ENEMY_RADIUS), 0f);
 
         this.level = level;
-        setBoundedByLevel(bounded);
     }
 
     /**
@@ -71,16 +55,6 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Gets a value indicating if the enemy is bounded by the level.
-     * 
-     * @return If the enemy is bounded
-     */
-    public final boolean isBoundedByLevel()
-    {
-        return this.boundedByLevel;
-    }
-
-    /**
      * Delegate method that is run when a coin is collected by the player.
      * 
      * @param coinX The X coordinate of the coin
@@ -92,14 +66,14 @@ public abstract class Enemy extends MovableEntity
     }
 
     /**
-     * Delegate method that is run when the player dies.
+     * Delegate method that is called when the player dies.
      */
     public void onPlayerDeath()
     {
     }
 
     /**
-     * Delegate method that is run then the player respawns after a death.
+     * Delegate method that is called when the player respawns after a death.
      */
     public void onPlayerRespawn()
     {
@@ -142,16 +116,6 @@ public abstract class Enemy extends MovableEntity
 
         g.drawLine(this.getCenterX() - this.getWidth() / 4, this.getCenterY() + this.getWidth() / 4 - 1,
                 this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() + this.getWidth() / 4 - 1);
-    }
-
-    /**
-     * Sets if the enemy is bounded by the level.
-     * 
-     * @param bounded If the enemy is bounded by the level
-     */
-    public void setBoundedByLevel(boolean bounded)
-    {
-        this.boundedByLevel = bounded;
     }
 
     /**

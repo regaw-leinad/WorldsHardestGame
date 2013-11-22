@@ -20,6 +20,6 @@ public class BasicEnemy extends Enemy
      */
     public BasicEnemy(float x, float y, Level level)
     {
-        super(x, y, level, true);
+        super(x, y, level);
     }
 }
