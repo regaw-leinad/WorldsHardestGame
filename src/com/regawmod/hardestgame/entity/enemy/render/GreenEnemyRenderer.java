@@ -3,8 +3,9 @@ package com.regawmod.hardestgame.entity.enemy.render;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import com.regawmod.hardestgame.entity.Enemy;
+import com.regawmod.hardestgame.entity.EntityRenderer;
 
-public class GreenEnemyRenderer implements EnemyRenderer
+public class GreenEnemyRenderer implements EntityRenderer
 {
     private Enemy enemy;
 
@@ -14,7 +15,7 @@ public class GreenEnemyRenderer implements EnemyRenderer
     }
 
     @Override
-    public void renderEnemy(Graphics g)
+    public void renderEntity(Graphics g)
     {
         g.setColor(Color.black);
         g.fillOval(this.enemy.getX(), this.enemy.getY(), this.enemy.getWidth(), this.enemy.getHeight());

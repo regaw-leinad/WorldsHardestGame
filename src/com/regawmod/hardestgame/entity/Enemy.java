@@ -5,7 +5,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 import com.regawmod.entity.MovableEntity;
 import com.regawmod.hardestgame.entity.enemy.render.BlueEnemyRenderer;
-import com.regawmod.hardestgame.entity.enemy.render.EnemyRenderer;
 import com.regawmod.hardestgame.level.Level;
 
 /**
@@ -21,7 +20,7 @@ public abstract class Enemy extends MovableEntity
     /** The level */
     private Level level;
 
-    private EnemyRenderer enemyRenderer;
+    private EntityRenderer enemyRenderer;
 
     /**
      * Creates a new {@link Enemy}
@@ -88,7 +87,7 @@ public abstract class Enemy extends MovableEntity
      * 
      * @param enemyRenderer The renderer for the enemy
      */
-    public void setEnemyRenderer(EnemyRenderer enemyRenderer)
+    public void setEnemyRenderer(EntityRenderer enemyRenderer)
     {
         this.enemyRenderer = enemyRenderer;
     }
@@ -98,7 +97,7 @@ public abstract class Enemy extends MovableEntity
      * 
      * @return The enemy's renderer
      */
-    public EnemyRenderer getEnemyRenderer()
+    public EntityRenderer getEnemyRenderer()
     {
         return this.enemyRenderer;
     }
@@ -106,7 +105,7 @@ public abstract class Enemy extends MovableEntity
     @Override
     public final void render(Graphics g)
     {
-        this.enemyRenderer.renderEnemy(g);
+        this.enemyRenderer.renderEntity(g);
     }
 
     /**
