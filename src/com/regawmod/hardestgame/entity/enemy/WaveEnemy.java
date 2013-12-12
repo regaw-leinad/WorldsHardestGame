@@ -37,40 +37,12 @@ public class WaveEnemy extends Enemy
         }
         else
         {
-            if (isOutsideOfAmplitude())
+            if (this.getCenterY() > this.centerY)
             {
+                this.setSpeed(5 + (getSpeed() * ((this.centerY + this.amplitude) - getCenterY())));
 
-                while (isOutsideOfAmplitude())
-                    this.moveY(this.getBactrackComponent(dt));
-
-                this.turnAround();
             }
-
-            if (getSpeed() < 0 && getCenterY() > this.centerY)
-            {
-                setSpeed(getSpeed() + 20f * dt);
-            }
-            else if (getSpeed() < 0 && getCenterY() <= this.centerY)
-            {
-                setSpeed(getSpeed() - 20f * dt);
-            }
-            else if (getSpeed() > 0 && getCenterY() > this.centerY)
-            {
-                setSpeed(getSpeed() - 20f * dt);
-            }
-            else if (getSpeed() > 0 && getCenterY() <= this.centerY)
-            {
-                setSpeed(getSpeed() + 20f * dt);
-            }
-
-            this.moveY(getSpeed() * dt);
         }
-    }
-
-    private boolean isOutsideOfAmplitude()
-    {
-        return this.getCenterY() - Enemy.ENEMY_RADIUS <= this.centerY - amplitude && getSpeed() <= 0 ||
-                this.getCenterY() + Enemy.ENEMY_RADIUS >= this.centerY + amplitude && getSpeed() >= 0;
     }
 
     public static List<Enemy> getWaveEnemyGroup(float startX, float endX, float centerY, float amplitude, Level level)
@@ -90,7 +62,7 @@ public class WaveEnemy extends Enemy
             //                speed *= -1;
             //                sectionCounter++;
             //            }
-            enemies.add(new WaveEnemy((startX + Enemy.ENEMY_RADIUS) + (2 * Enemy.ENEMY_RADIUS) * i, centerY, centerY, amplitude, 80f, 0.09f * i, level));
+            enemies.add(new WaveEnemy((startX + Enemy.ENEMY_RADIUS) + (2 * Enemy.ENEMY_RADIUS) * i, centerY, centerY, amplitude, 80f, 0.02f * i, level));
 
             //            enemies.add(new WaveEnemy((startX + Enemy.ENEMY_RADIUS) + (2 * Enemy.ENEMY_RADIUS) * i,
             //                    (float)(centerY + Math.sin(angle) * amplitude), centerY, amplitude, 100f * speed, level));

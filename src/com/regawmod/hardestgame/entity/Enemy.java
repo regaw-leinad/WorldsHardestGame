@@ -1,10 +1,11 @@
 package com.regawmod.hardestgame.entity;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 import com.regawmod.entity.MovableEntity;
+import com.regawmod.hardestgame.entity.enemy.render.BlueEnemyRenderer;
+import com.regawmod.hardestgame.entity.enemy.render.EnemyRenderer;
 import com.regawmod.hardestgame.level.Level;
 
 /**
@@ -20,6 +21,8 @@ public abstract class Enemy extends MovableEntity
     /** The level */
     private Level level;
 
+    private EnemyRenderer enemyRenderer;
+
     /**
      * Creates a new {@link Enemy}
      * 
@@ -32,6 +35,7 @@ public abstract class Enemy extends MovableEntity
         super(new Circle(x, y, ENEMY_RADIUS), 0f);
 
         this.level = level;
+        this.setEnemyRenderer(new BlueEnemyRenderer(this));
     }
 
     /**
@@ -79,43 +83,30 @@ public abstract class Enemy extends MovableEntity
     {
     }
 
+    /**
+     * Sets the enemy's render behavior
+     * 
+     * @param enemyRenderer The renderer for the enemy
+     */
+    public void setEnemyRenderer(EnemyRenderer enemyRenderer)
+    {
+        this.enemyRenderer = enemyRenderer;
+    }
+
+    /**
+     * Gets the enemy's renderer
+     * 
+     * @return The enemy's renderer
+     */
+    public EnemyRenderer getEnemyRenderer()
+    {
+        return this.enemyRenderer;
+    }
+
     @Override
     public final void render(Graphics g)
     {
-        renderBlueEnemy(g);
-    }
-
-    /**
-     * Renders the blue version of the enemy.
-     * 
-     * @param g The graphics object
-     */
-    private void renderBlueEnemy(Graphics g)
-    {
-        g.setColor(Color.black);
-        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        g.setColor(Color.blue);
-        g.fillOval(this.getX() + 3, this.getY() + 3, this.getWidth() - 6, this.getHeight() - 6);
-    }
-
-    /**
-     * Renders the green version of the enemy.
-     * 
-     * @param g The graphics object
-     */
-    private void renderGreenFaceEnemy(Graphics g)
-    {
-        g.setColor(Color.black);
-        g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        g.setColor(Color.green);
-        g.fillOval(this.getX() + 1, this.getY() + 1, this.getWidth() - 2, this.getHeight() - 2);
-
-        g.setColor(Color.black);
-        g.fillOval(this.getCenterX() - this.getWidth() / 4 - 1, this.getCenterY() - this.getWidth() / 4 + 1, 2, 2);
-        g.fillOval(this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() - this.getWidth() / 4 + 1, 2, 2);
-
-        g.drawLine(this.getCenterX() - this.getWidth() / 4, this.getCenterY() + this.getWidth() / 4 - 1,
-                this.getCenterX() + this.getWidth() / 4 - 1, this.getCenterY() + this.getWidth() / 4 - 1);
+        this.enemyRenderer.renderEnemy(g);
     }
 
     /**
