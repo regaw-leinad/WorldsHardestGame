@@ -52,6 +52,7 @@ public final class LevelLoader
     /**
      * Loads all levels from the file system.
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void loadAllLevels()
     {
         pluginCollection.clear();
@@ -103,6 +104,7 @@ public final class LevelLoader
      * @throws IOException If there is an error reading from the file
      * @throws FileNotFoundException If the file does not exist
      */
+    @SuppressWarnings("rawtypes")
     private void loadLevelImages(List<String> imageNames, Class currentClass) throws IOException, FileNotFoundException
     {
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
@@ -179,6 +181,7 @@ public final class LevelLoader
      * @throws MalformedURLException If the URL to the jar is bad
      * @throws ClassNotFoundException If the specified class doesn't exist
      */
+    @SuppressWarnings({ "resource", "rawtypes" })
     private Class getClass(File file, String name) throws MalformedURLException, ClassNotFoundException
     {
         URLClassLoader classLoader;
@@ -196,6 +199,7 @@ public final class LevelLoader
      * @param u The URL to the jar file
      * @throws IOException If there is an error reading the jar
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addURLToClasspath(URL u) throws IOException
     {
         URLClassLoader sysLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
